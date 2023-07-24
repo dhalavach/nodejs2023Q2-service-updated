@@ -50,59 +50,32 @@ export class UserService {
 
   async updateUserById(id: string, dto: UpdateUserDto) {
     if (!validate(id)) throw new BadRequestException('invalid id');
+
     if (!(dto?.oldPassword && dto?.newPassword))
       throw new BadRequestException('invalid dto');
 
     const user = await prisma.user.findFirst({ where: { id: id } });
     if (!user) throw new NotFoundException('user not found');
-    if (dto.oldPassword !== user.password) {
+
+    if (dto.oldPassword !== user.password)
       throw new ForbiddenException('wrong password');
-    } else {
-      const newUserData = {
-        ...user,
-        password: dto.newPassword,
-        updatedAt: Date.now(),
-        version: (user.version += 1),
-      };
 
-      await prisma.user.update({
-        where: {
-          id: id,
-        },
-        data: newUserData,
-      });
+    const newUserData = {
+      ...user,
+      password: dto.newPassword,
+      updatedAt: Date.now(),
+      version: (user.version += 1),
+    };
 
-      delete newUserData.password;
-      return newUserData;
-    }
+    await prisma.user.update({
+      where: {
+        id: id,
+      },
+      data: newUserData,
+    });
 
-    // if (validate(id)) {
-    //   const user = await prisma.user.findFirst({ where: { id: id } });
-    //   if (user) {
-    //     const updatedUser = { ...user };
-    //     if (dto.oldPassword === updatedUser.password) {
-    //       const updatedUserData = {
-    //         ...updatedUser,
-    //         password: dto.newPassword,
-    //         updatedAt: Date.now(),
-    //         version: updatedUser.version + 1,
-    //       };
-    //       await prisma.user.update({
-    //         where: {
-    //           id: id,
-    //         },
-    //         data: updatedUserData,
-    //       });
-
-    //       const response = { ...updatedUserData };
-    //       delete response.password;
-    //       return response;
-    //     } else {
-    //       throw new ForbiddenException('Wrong password');
-    //     }
-    //   } else throw new NotFoundException('User not found');
-    // }
-    // throw new BadRequestException('Invalid id');
+    delete newUserData.password;
+    return newUserData;
   }
 
   async deleteUserById(id: string) {
