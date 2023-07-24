@@ -34,6 +34,14 @@ model Album {
   artistId String?
 }
 
+model Track {
+  id       String  @id @default(uuid())
+  name     String
+  artistId String?
+  albumId  String?
+  duration Int
+}
+
 model Favorites {
   id      String   @id @default(uuid()) //fix
   artists String[]

@@ -22,18 +22,18 @@ export class ArtistController {
   }
 
   @Get(':id')
-  getUserById(@Param('id') id: string) {
+  getArtistById(@Param('id') id: string) {
     return this.ArtistService.getArtistById(id);
   }
 
   @Post()
   @HttpCode(201)
-  createUser(@Body() dto: CreateArtistDto) {
+  createArtist(@Body() dto: CreateArtistDto) {
     return this.ArtistService.createArtist(dto);
   }
 
   @Put(':id')
-  updateUserById(
+  updateArtistById(
     @Param('id') id: string,
     @Body() updateArtistDto: UpdateArtistDto,
   ) {
@@ -42,7 +42,7 @@ export class ArtistController {
 
   @Delete(':id')
   @HttpCode(204)
-  deleteUserById(@Param('id') id: string) {
+  deleteArtistById(@Param('id') id: string) {
     return this.ArtistService.deleteArtistById(id);
   }
 }

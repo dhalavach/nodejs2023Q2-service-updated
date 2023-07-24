@@ -22,18 +22,18 @@ export class AlbumController {
   }
 
   @Get(':id')
-  getUserById(@Param('id') id: string) {
+  getAlbumById(@Param('id') id: string) {
     return this.AlbumService.getAlbumById(id);
   }
 
   @Post()
   @HttpCode(201)
-  createUser(@Body() dto: CreateAlbumDto) {
+  createAlbum(@Body() dto: CreateAlbumDto) {
     return this.AlbumService.createAlbum(dto);
   }
 
   @Put(':id')
-  updateUserById(
+  updateAlbumById(
     @Param('id') id: string,
     @Body() updateAlbumDto: UpdateAlbumDto,
   ) {
@@ -42,7 +42,7 @@ export class AlbumController {
 
   @Delete(':id')
   @HttpCode(204)
-  deleteUserById(@Param('id') id: string) {
+  deleteAlbumById(@Param('id') id: string) {
     return this.AlbumService.deleteAlbumById(id);
   }
 }

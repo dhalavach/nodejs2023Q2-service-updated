@@ -82,6 +82,17 @@ export class ArtistService {
       },
     });
 
+    const updateTracks = await prisma.track.updateMany({
+      where: {
+        artistId: {
+          equals: id,
+        },
+      },
+      data: {
+        artistId: null,
+      },
+    });
+
     return await prisma.artist.delete({
       where: {
         id: id,

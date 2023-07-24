@@ -7,10 +7,12 @@ import { ArtistModule } from './artist/artist.module';
 import { Artist } from './artist';
 import { AlbumModule } from './album/album.module';
 import { Album } from './album';
+import { TrackModule } from './track/track.module';
+import { Track } from './track';
 
 @Module({
-  imports: [UserModule, ArtistModule, AlbumModule],
+  imports: [UserModule, ArtistModule, AlbumModule, TrackModule],
   controllers: [AppController],
-  providers: [AppService, User, Artist, Album],
+  providers: [AppService, User, Artist, Album, Track],
 })
 export class AppModule {}

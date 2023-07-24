@@ -75,6 +75,17 @@ export class AlbumService {
     if (!(await prisma.album.findFirst({ where: { id: id } })))
       throw new NotFoundException('album not found');
 
+    const updateTracks = await prisma.track.updateMany({
+      where: {
+        albumId: {
+          equals: id,
+        },
+      },
+      data: {
+        albumId: null,
+      },
+    });
+
     return await prisma.album.delete({
       where: {
         id: id,
