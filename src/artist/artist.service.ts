@@ -71,6 +71,17 @@ export class ArtistService {
     if (!(await prisma.artist.findFirst({ where: { id: id } })))
       throw new NotFoundException('artist not found');
 
+    const updateAlbums = await prisma.album.updateMany({
+      where: {
+        artistId: {
+          equals: id,
+        },
+      },
+      data: {
+        artistId: null,
+      },
+    });
+
     return await prisma.artist.delete({
       where: {
         id: id,
