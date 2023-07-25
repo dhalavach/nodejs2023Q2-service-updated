@@ -42,7 +42,7 @@ export class ArtistService {
     if (!validate(id)) throw new BadRequestException('invalid id');
 
     const artist = await prisma.artist.findFirst({ where: { id: id } });
-    if (!artist) throw new NotFoundException('user not found');
+    if (!artist) throw new NotFoundException('artist not found');
 
     if (
       (!dto?.name && !dto?.grammy) ||

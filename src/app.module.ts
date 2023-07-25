@@ -9,10 +9,18 @@ import { AlbumModule } from './album/album.module';
 import { Album } from './album';
 import { TrackModule } from './track/track.module';
 import { Track } from './track';
+import { FavoritesModule } from './favorites/favorites.module';
+import { Favorites } from './favorites';
 
 @Module({
-  imports: [UserModule, ArtistModule, AlbumModule, TrackModule],
+  imports: [
+    UserModule,
+    ArtistModule,
+    AlbumModule,
+    TrackModule,
+    FavoritesModule,
+  ],
   controllers: [AppController],
-  providers: [AppService, User, Artist, Album, Track],
+  providers: [AppService, User, Artist, Album, Track, Favorites],
 })
 export class AppModule {}
