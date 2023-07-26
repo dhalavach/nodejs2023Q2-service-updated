@@ -38,21 +38,21 @@ export class FavoritesController {
     return this.FavoritesService.addArtist(id);
   }
 
-  // @Delete('track/:id')
-  // @HttpCode(204)
-  // removeTrack(@Param('id') id: string) {
-  //   return this.FavoritesService.removeTrack(id);
-  // }
+  @Delete('track/:id')
+  @HttpCode(204)
+  deleteTrack(@Param('id') id: string) {
+    return this.FavoritesService.deleteTrack(id);
+  }
 
-  // @Delete('album/:id')
-  // @HttpCode(204)
-  // removeAlbum(@Param('id') id: string) {
-  //   return this.FavoritesService.removeAlbum(id);
-  // }
+  @Delete('album/:id')
+  @HttpCode(204)
+  deleteAlbum(@Param('id') id: string) {
+    return this.FavoritesService.deleteAlbum(id);
+  }
 
-  // @Delete('artist/:id')
-  // @HttpCode(204)
-  // removeArtist(@Param('id') id: string) {
-  //   return this.FavoritesService.removeArtist(id);
-  // }
+  @Delete('artist/:id')
+  @HttpCode(204)
+  deleteArtist(@Param('id') id: string) {
+    return this.FavoritesService.deleteArtist(id);
+  }
 }

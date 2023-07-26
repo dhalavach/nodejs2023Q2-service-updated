@@ -162,17 +162,55 @@ export class FavoritesService {
         artists: [],
         tracks: [],
       };
+      favObject.tracks.push(track);
       await prisma.favorites.create({ data: favObject });
     }
 
     const trackData = data.tracks;
     trackData.push(id);
     const newData = { ...data, tracks: trackData };
+
     return await prisma.favorites.update({
       where: {
         favoritesId: data.favoritesId,
       },
       data: newData,
+    });
+  }
+
+  async deleteTrack(id: string) {
+    const favs = await prisma.favorites.findFirst();
+    const newTracks = favs?.tracks.filter((track) => track !== id);
+    const newTrackData = { ...favs, tracks: newTracks };
+
+    return await prisma.favorites.update({
+      where: {
+        favoritesId: favs.favoritesId,
+      },
+      data: newTrackData,
+    });
+  }
+
+  async deleteAlbum(id: string) {
+    const favs = await prisma.favorites.findFirst();
+    const newAlbums = favs?.albums.filter((album) => album !== id);
+
+    return await prisma.favorites.update({
+      where: {
+        favoritesId: favs.favoritesId,
+      },
+      data: { ...favs, albums: newAlbums },
+    });
+  }
+  async deleteArtist(id: string) {
+    const favs = await prisma.favorites.findFirst();
+    const newArtists = favs?.artists.filter((artist) => artist !== id);
+
+    return await prisma.favorites.update({
+      where: {
+        favoritesId: favs.favoritesId,
+      },
+      data: { ...favs, artists: newArtists },
     });
   }
 }
