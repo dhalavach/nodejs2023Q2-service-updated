@@ -31,13 +31,14 @@ export class FavoritesService {
           where: { id: id },
         });
 
-        // return {
-        //   artistId: trackObject?.artistId,
-        //   id: trackObject?.id,
-        //   name: trackObject?.name,
-        //   year: trackObject?.duration,
-        // };
-        return trackObject;
+        return {
+          albumId: trackObject?.albumId,
+          artistId: trackObject?.artistId,
+          id: trackObject?.id,
+          name: trackObject?.name,
+          duration: trackObject?.duration,
+        };
+        // return trackObject;
       }),
     );
 
@@ -128,7 +129,7 @@ export class FavoritesService {
         artists: [],
         tracks: [],
       };
-      favObject.artists.push(artist);
+      favObject.artists.push(artist.id);
       await prisma.favorites.create({ data: favObject });
     }
 
@@ -151,43 +152,43 @@ export class FavoritesService {
         id: id,
       },
     });
-    if (!track) throw new UnprocessableEntityException();
+    if (!track) throw new UnprocessableEntityException('track not found');
 
     const data = await prisma.favorites.findFirst();
     // if (!data) throw new NotFoundException('favorites not found');
-    if (!data) {
-      const favObject = {
-        favoritesId: uuidv4(),
-        albums: [],
-        artists: [],
-        tracks: [],
-      };
-      favObject.tracks.push(track);
-      await prisma.favorites.create({ data: favObject });
-    }
+    const favObject = {
+      favoritesId: uuidv4(),
+      albums: [],
+      artists: [],
+      tracks: [],
+    };
+    if (!data) await prisma.favorites.create({ data: favObject });
 
-    const trackData = data.tracks;
-    trackData.push(id);
-    const newData = { ...data, tracks: trackData };
+    const favId = data ? data.favoritesId : favObject.favoritesId;
 
-    return await prisma.favorites.update({
+    const tracks = data?.tracks || [];
+    tracks.push(track.id);
+
+    await prisma.favorites.update({
       where: {
-        favoritesId: data.favoritesId,
+        favoritesId: favId,
       },
-      data: newData,
+      data: { ...data, tracks: tracks },
     });
   }
 
   async deleteTrack(id: string) {
     const favs = await prisma.favorites.findFirst();
+    if (favs.tracks.findIndex((el) => el === id) === -1) {
+      throw new NotFoundException('track not in favorites');
+    }
     const newTracks = favs?.tracks.filter((track) => track !== id);
-    const newTrackData = { ...favs, tracks: newTracks };
 
     return await prisma.favorites.update({
       where: {
         favoritesId: favs.favoritesId,
       },
-      data: newTrackData,
+      data: { ...favs, tracks: newTracks },
     });
   }
 
@@ -195,7 +196,7 @@ export class FavoritesService {
     const favs = await prisma.favorites.findFirst();
     const newAlbums = favs?.albums.filter((album) => album !== id);
 
-    return await prisma.favorites.update({
+    await prisma.favorites.update({
       where: {
         favoritesId: favs.favoritesId,
       },
