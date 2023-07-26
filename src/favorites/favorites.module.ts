@@ -10,7 +10,7 @@ import { TrackModule } from 'src/track/track.module';
     forwardRef(() => TrackModule),
     forwardRef(() => AlbumModule),
     forwardRef(() => ArtistModule),
-  ], // not sure - check later
+  ],
 
   controllers: [FavoritesController],
   providers: [FavoritesService],

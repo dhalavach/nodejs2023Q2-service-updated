@@ -22,6 +22,7 @@ export class TrackController {
   }
 
   @Get(':id')
+  @HttpCode(200)
   getTrackById(@Param('id') id: string) {
     return this.TrackService.getTrackById(id);
   }

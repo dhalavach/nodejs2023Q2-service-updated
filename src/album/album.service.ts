@@ -1,30 +1,38 @@
 import {
   BadRequestException,
   ForbiddenException,
+  Inject,
   Injectable,
   NotFoundException,
+  forwardRef,
 } from '@nestjs/common';
-import { PrismaClient } from '@prisma/client';
 import { CreateAlbumDto } from './create-album.dto';
 import { v4 as uuidv4 } from 'uuid';
 import { validate } from 'uuid';
 import { UpdateAlbumDto } from './update-album.dto';
-const prisma = new PrismaClient();
+import { database } from 'src/database/database';
+import { ArtistService } from 'src/artist/artist.service';
 
 @Injectable()
 export class AlbumService {
+  constructor(
+    @Inject(forwardRef(() => ArtistService))
+    private readonly artistService: ArtistService,
+  ) {}
+
   async getAll() {
-    return await prisma.album.findMany();
+    return database.albums;
   }
 
-  async getAlbumById(id: string) {
-    if (!validate(id)) throw new BadRequestException('invalid id');
-    const album = await prisma.album.findFirst({ where: { id: id } });
-    if (!album) throw new NotFoundException('album not found');
-    else return album;
+  getAlbumById(id: string) {
+    if (validate(id)) {
+      const album = database.albums.find((album) => album.id === id);
+      if (album) return album;
+      else throw new NotFoundException('album not found');
+    } else throw new BadRequestException('invalid id');
   }
 
-  async createAlbum(dto: CreateAlbumDto) {
+  createAlbum(dto: CreateAlbumDto) {
     if (!(dto?.name && dto?.year)) {
       throw new BadRequestException('dto missing required fields');
     } else {
@@ -34,17 +42,15 @@ export class AlbumService {
         year: dto.year,
         artistId: dto.artistId,
       };
-      return await prisma.album.create({
-        data: albumData,
-      });
+      database.albums.push(albumData);
     }
   }
 
-  async updateAlbumById(id: string, dto: UpdateAlbumDto) {
+  updateAlbumById(id: string, dto: UpdateAlbumDto) {
     if (!validate(id)) throw new BadRequestException('invalid id');
 
-    const album = await prisma.album.findFirst({ where: { id: id } });
-    if (!album) throw new NotFoundException('album not found');
+    const index = database.albums.findIndex((album) => album.id === id);
+    if (index === -1) throw new NotFoundException('album not found');
 
     if (
       (!dto?.name && !dto?.year && !dto?.artistId) ||
@@ -53,7 +59,7 @@ export class AlbumService {
       (dto?.artistId && typeof dto?.artistId !== 'string')
     )
       throw new BadRequestException('invalid dto');
-
+    const album = database.albums.find((album) => album.id === id);
     const newAlbumData = {
       ...album,
       name: dto?.name,
@@ -61,35 +67,20 @@ export class AlbumService {
       artistId: dto?.artistId,
     };
 
-    return await prisma.album.update({
-      where: {
-        id: id,
-      },
-      data: newAlbumData,
-    });
+    database.albums[index] = newAlbumData;
+    return newAlbumData;
   }
 
-  async deleteAlbumById(id: string) {
-    if (!validate(id)) throw new BadRequestException('invalid id');
+  deleteAlbumById(id: string) {
+    if (validate(id) === false) throw new BadRequestException('invalid id');
+    const index = database.albums.findIndex((album) => album.id === id);
+    if (index === -1) throw new NotFoundException('album not found');
 
-    if (!(await prisma.album.findFirst({ where: { id: id } })))
-      throw new NotFoundException('album not found');
-
-    const updateTracks = await prisma.track.updateMany({
-      where: {
-        albumId: {
-          equals: id,
-        },
-      },
-      data: {
-        albumId: null,
-      },
+    database.tracks.forEach((track) => {
+      if (track.albumId === id) track.albumId === null;
     });
-
-    return await prisma.album.delete({
-      where: {
-        id: id,
-      },
-    });
+    database.favorites.albums = database.albums.filter((album) => album !== id);
+    database.albums = database.albums.filter((album) => album !== id);
+    return true;
   }
 }

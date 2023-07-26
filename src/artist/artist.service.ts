@@ -9,21 +9,22 @@ import { CreateArtistDto } from './create-artist.dto';
 import { v4 as uuidv4 } from 'uuid';
 import { validate } from 'uuid';
 import { UpdateArtistDto } from './update-artist.dto';
+import { database } from 'src/database/database';
 const prisma = new PrismaClient();
 @Injectable()
 export class ArtistService {
-  async getAll() {
-    return await prisma.artist.findMany();
+  getAll() {
+    return database.artists;
   }
 
-  async getArtistById(id: string) {
+  getArtistById(id: string) {
     if (!validate(id)) throw new BadRequestException('invalid id');
-    const artist = await prisma.artist.findFirst({ where: { id: id } });
+    const artist = database.artists.find((artist) => artist.id === id);
     if (!artist) throw new NotFoundException('artist not found');
     else return artist;
   }
 
-  async createArtist(dto: CreateArtistDto) {
+  createArtist(dto: CreateArtistDto) {
     if (!(dto?.name && dto?.grammy)) {
       throw new BadRequestException('dto missing required fields');
     } else {
@@ -32,17 +33,16 @@ export class ArtistService {
         name: dto.name,
         grammy: dto.grammy,
       };
-      return await prisma.artist.create({
-        data: artistData,
-      });
+      database.artists.push(artistData);
+      return artistData;
     }
   }
 
-  async updateArtistById(id: string, dto: UpdateArtistDto) {
+  updateArtistById(id: string, dto: UpdateArtistDto) {
     if (!validate(id)) throw new BadRequestException('invalid id');
 
-    const artist = await prisma.artist.findFirst({ where: { id: id } });
-    if (!artist) throw new NotFoundException('artist not found');
+    const index = database.artists.findIndex((artist) => artist.id === id);
+    if (index === -1) throw new NotFoundException('artist not found');
 
     if (
       (!dto?.name && !dto?.grammy) ||
@@ -50,53 +50,34 @@ export class ArtistService {
       (dto?.grammy && typeof dto?.grammy !== 'boolean')
     )
       throw new BadRequestException('invalid dto');
+    const artist = database.artists.find((artist) => artist.id === id);
 
     const newArtistData = {
       ...artist,
       name: dto.name,
       grammy: dto.grammy,
     };
-
-    return await prisma.artist.update({
-      where: {
-        id: id,
-      },
-      data: newArtistData,
-    });
+    try {
+      database.artists[index] = newArtistData;
+      return true;
+    } catch (err) {
+      console.log(err);
+      return false;
+    }
   }
 
-  async deleteArtistById(id: string) {
+  deleteArtistById(id: string) {
     if (!validate(id)) throw new BadRequestException('invalid id');
+    const index = database.artists.findIndex((artist) => artist.id === id);
+    if (index === -1) throw new NotFoundException('artist not found');
 
-    if (!(await prisma.artist.findFirst({ where: { id: id } })))
-      throw new NotFoundException('artist not found');
-
-    const updateAlbums = await prisma.album.updateMany({
-      where: {
-        artistId: {
-          equals: id,
-        },
-      },
-      data: {
-        artistId: null,
-      },
+    database.albums.forEach((album) => {
+      if (album.artistId === id) album.artistId === null;
+    });
+    database.tracks.forEach((track) => {
+      if (track.artistId === id) track.artistId === null;
     });
 
-    const updateTracks = await prisma.track.updateMany({
-      where: {
-        artistId: {
-          equals: id,
-        },
-      },
-      data: {
-        artistId: null,
-      },
-    });
-
-    return await prisma.artist.delete({
-      where: {
-        id: id,
-      },
-    });
+    database.artists = database.artists.filter((artist) => artist.id !== id);
   }
 }

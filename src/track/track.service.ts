@@ -1,31 +1,49 @@
 import {
   BadRequestException,
   ForbiddenException,
+  Inject,
   Injectable,
   NotFoundException,
+  forwardRef,
 } from '@nestjs/common';
-import { PrismaClient } from '@prisma/client';
 import { CreateTrackDto } from './create-track.dto';
 import { v4 as uuidv4 } from 'uuid';
 import { validate } from 'uuid';
 import { UpdateTrackDto } from './update-track.dto';
-const prisma = new PrismaClient();
+import { database } from 'src/database/database';
+import { AlbumService } from 'src/album/album.service';
+import { ArtistService } from 'src/artist/artist.service';
 
 @Injectable()
 export class TrackService {
-  async getAll() {
-    return await prisma.track.findMany();
+  constructor(
+    @Inject(forwardRef(() => AlbumService))
+    private readonly albumService: AlbumService,
+    @Inject(forwardRef(() => ArtistService))
+    private readonly artistService: ArtistService,
+  ) {}
+
+  getAll() {
+    return database.tracks;
   }
 
-  async getTrackById(id: string) {
-    if (!validate(id)) throw new BadRequestException('invalid id');
-    const track = await prisma.track.findFirst({ where: { id: id } });
-    if (!track) throw new NotFoundException('track not found');
-    else return track;
+  getTrackById(id: string) {
+    if (!validate(id)) {
+      throw new BadRequestException('invalid id');
+    } else {
+      const track = database.tracks.find((track) => track.id === id);
+      if (!track) {
+        throw new NotFoundException('track not found');
+      } else return track;
+    }
   }
 
-  async createTrack(dto: CreateTrackDto) {
-    if (!(dto?.name && dto?.duration)) {
+  createTrack(dto: CreateTrackDto) {
+    if (
+      !(dto?.name && dto?.duration) ||
+      typeof dto?.name !== 'string' ||
+      typeof dto?.duration !== 'number'
+    ) {
       throw new BadRequestException('dto missing required fields');
     } else {
       const trackData = {
@@ -35,16 +53,15 @@ export class TrackService {
         artistId: dto?.artistId,
         albumId: dto?.albumId,
       };
-      return await prisma.track.create({
-        data: trackData,
-      });
+      database.tracks.push(trackData);
+      return trackData;
     }
   }
 
-  async updateTrackById(id: string, dto: UpdateTrackDto) {
+  updateTrackById(id: string, dto: UpdateTrackDto) {
     if (!validate(id)) throw new BadRequestException('invalid id');
 
-    const track = await prisma.track.findFirst({ where: { id: id } });
+    const track = database.tracks.find((track) => track.id === id);
     if (!track) throw new NotFoundException('track not found');
 
     if (
@@ -58,30 +75,20 @@ export class TrackService {
 
     const newTrackData = {
       ...track,
-      name: dto?.name,
-      duration: dto?.duration,
-      artistId: dto?.artistId,
-      albumId: dto?.albumId,
+      ...dto,
     };
+    const index = database.tracks.findIndex((track) => track.id === id);
 
-    return await prisma.track.update({
-      where: {
-        id: id,
-      },
-      data: newTrackData,
-    });
+    database.tracks[index] = newTrackData;
+    return index;
   }
 
-  async deleteTrackById(id: string) {
+  deleteTrackById(id: string) {
     if (!validate(id)) throw new BadRequestException('invalid id');
+    const index = database.tracks.findIndex((track) => track.id === id);
 
-    if (!(await prisma.track.findFirst({ where: { id: id } })))
-      throw new NotFoundException('track not found');
+    if (index === -1) throw new NotFoundException('track not found');
 
-    return await prisma.track.delete({
-      where: {
-        id: id,
-      },
-    });
+    return database.tracks.splice(index);
   }
 }
