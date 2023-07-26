@@ -70,3 +70,15 @@ npm run format
 Press <kbd>F5</kbd> to debug.
 
 For more information, visit: https://code.visualstudio.com/docs/editor/debugging
+
+Instructions for docker/prisma version
+
+Docker:
+docker compose up app -d
+
+Generate the database:
+npx prisma generate
+npx prisma migrate dev
+
+if necessary, reset the db:
+npx prisma migrate reset
