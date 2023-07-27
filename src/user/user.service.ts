@@ -37,8 +37,10 @@ export class UserService {
       updatedAt: Number(Date.now()),
     };
     database.users.push(userData);
-    delete userData.password;
-    return userData;
+
+    const response = { ...userData };
+    delete response.password;
+    return response;
   }
 
   updateUserById(id: string, dto: UpdateUserDto) {
@@ -53,27 +55,23 @@ export class UserService {
     }
     const index = database.users.findIndex((user) => user.id === id);
     if (index === -1) throw new NotFoundException('user not found');
-
     const user = database.users.find((user) => user.id === id);
-
-    if (dto.oldPassword === user.password) {
-      const newUserData = {
-        user: user.id,
-        login: user.login,
-        password: dto.newPassword,
-        createdAt: user.createdAt,
-        updatedAt: Date.now(),
-        version: user.version++,
-      };
-
-      database.users[index] = newUserData;
-      const resp = { ...newUserData };
-
-      delete resp.password;
-      return resp;
-    } else {
+    if (dto.oldPassword !== user.password) {
       throw new ForbiddenException('wrong password');
     }
+    const newVersion = user.version + 1;
+    const newUserData = {
+      ...user,
+      password: dto.newPassword,
+      updatedAt: Date.now(),
+      version: newVersion,
+    };
+
+    database.users[index] = newUserData;
+    const response = { ...newUserData };
+
+    delete response.password;
+    return response;
   }
 
   deleteUserById(id: string) {
@@ -81,12 +79,7 @@ export class UserService {
     const index = database.users.findIndex((user) => user.id === id);
     if (index === -1) throw new NotFoundException('user not found');
 
-    try {
-      database.users.splice(index, 1); //check
-      return true;
-    } catch (err) {
-      console.log(err);
-      return false;
-    }
+    database.users.splice(index, 1); //check
+    return 'user deleted';
   }
 }

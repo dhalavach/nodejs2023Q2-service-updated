@@ -33,6 +33,7 @@ export class UserController {
   }
 
   @Put(':id')
+  @HttpCode(200)
   updateUserById(
     @Param('id') id: string,
     @Body() updateUserDto: UpdateUserDto,

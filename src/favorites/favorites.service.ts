@@ -18,15 +18,6 @@ import { database } from 'src/database/database';
 
 @Injectable()
 export class FavoritesService {
-  constructor(
-    @Inject(forwardRef(() => TrackService))
-    private readonly trackService: TrackService,
-    @Inject(forwardRef(() => AlbumService))
-    private readonly albumService: AlbumService,
-    @Inject(forwardRef(() => ArtistService))
-    private readonly artistService: ArtistService,
-  ) {}
-
   getAll() {
     const tracks = [];
     const albums = [];
