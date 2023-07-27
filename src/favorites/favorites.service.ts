@@ -28,73 +28,95 @@ export class FavoritesService {
   ) {}
 
   getAll() {
-    const tracks = database.favorites.tracks.map((id) =>
-      this.trackService.getTrackById(id),
-    );
-    const albums = database.favorites.albums.map((id) =>
-      this.albumService.getAlbumById(id),
-    );
-    const artists = database.favorites.artists.map((id) =>
-      this.artistService.getArtistById(id),
-    );
+    // const tracks = database.favorites.tracks.map((id) => {
+    //   database.tracks.find((track) => track.id === id);
+    // });
+
+    // const albums = database.favorites.albums.map((id) => {
+    //   database.albums.find((album) => album.id === id);
+    // });
+
+    // const artists = database.favorites.artists.map((id) => {
+    //   database.artists.find((artist) => artist.id === id);
+    // });
     return {
-      tracks,
-      albums,
-      artists,
+      tracks: database.favorites.tracks,
+      albums: database.favorites.albums,
+      artists: database.favorites.artists,
     };
   }
 
   addAlbum(id: string) {
-    if (!validate(id)) throw new BadRequestException('invalid id');
-    if (!database.albums.find((album) => album === id))
-      throw new UnprocessableEntityException();
-    if (!database.favorites.albums.find((album) => album === id))
-      database.favorites.albums.push(id);
+    if (validate(id)) {
+      if (database.albums.find((album) => album.id === id)) {
+        database.favorites.albums.push(id);
+        return id;
+      } else {
+        throw new UnprocessableEntityException();
+      }
+    } else {
+      throw new BadRequestException('invalid id');
+    }
   }
 
   addArtist(id: string) {
-    if (!validate(id)) throw new BadRequestException('invalid id');
-
-    if (!database.artists.find((album) => album === id))
-      throw new UnprocessableEntityException();
-    if (!database.favorites.artists.find((artist) => artist === id))
-      database.favorites.albums.push(id);
+    if (validate(id)) {
+      if (database.artists.find((artist) => artist.id === id)) {
+        database.favorites.artists.push(id);
+        return id;
+      } else {
+        throw new UnprocessableEntityException();
+      }
+    } else {
+      throw new BadRequestException('invalid id');
+    }
   }
 
   addTrack(id: string) {
-    if (!validate(id)) throw new BadRequestException('invalid id');
-
-    if (!database.tracks.find((album) => album === id))
-      throw new UnprocessableEntityException();
-    if (!database.favorites.tracks.find((track) => track === id))
-      database.favorites.tracks.push(id);
+    if (validate(id)) {
+      if (database.tracks.find((track) => track.id === id)) {
+        database.favorites.tracks.push(id);
+        return id;
+      } else {
+        throw new UnprocessableEntityException();
+      }
+    } else {
+      throw new BadRequestException('invalid id');
+    }
   }
 
   deleteTrack(id: string) {
-    if (!database.favorites.tracks.find((track) => track === id)) {
+    if (!validate(id)) throw new BadRequestException('invalid id');
+
+    if (!database.favorites.tracks.find((track) => track === id))
       throw new NotFoundException('track not in favorites');
-    }
 
     database.favorites.tracks = database.favorites.tracks.filter(
       (track) => track !== id,
     );
+    return;
   }
 
-  async deleteAlbum(id: string) {
-    if (!database.favorites.albums.find((album) => album === id)) {
+  deleteAlbum(id: string) {
+    if (!validate(id)) throw new BadRequestException('invalid id');
+
+    if (!database.favorites.albums.find((album) => album === id))
       throw new NotFoundException('album not in favorites');
-    }
+
     database.favorites.albums = database.favorites.albums.filter(
       (album) => album !== id,
     );
+    return;
   }
 
   deleteArtist(id: string) {
-    if (!database.favorites.artists.find((artist) => artist === id)) {
+    if (!validate(id)) throw new BadRequestException('invalid id');
+    if (!database.favorites.artists.find((artist) => artist === id))
       throw new NotFoundException('artist not in favorites');
-    }
+
     database.favorites.artists = database.favorites.artists.filter(
       (artist) => artist !== id,
     );
+    return;
   }
 }

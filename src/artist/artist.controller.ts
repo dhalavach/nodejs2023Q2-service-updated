@@ -17,11 +17,13 @@ export class ArtistController {
   constructor(private readonly ArtistService: ArtistService) {}
 
   @Get()
+  @HttpCode(200)
   getAll() {
     return this.ArtistService.getAll();
   }
 
   @Get(':id')
+  @HttpCode(200)
   getArtistById(@Param('id') id: string) {
     return this.ArtistService.getArtistById(id);
   }
@@ -33,6 +35,7 @@ export class ArtistController {
   }
 
   @Put(':id')
+  @HttpCode(200)
   updateArtistById(
     @Param('id') id: string,
     @Body() updateArtistDto: UpdateArtistDto,

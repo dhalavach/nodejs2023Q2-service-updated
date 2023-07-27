@@ -9,6 +9,7 @@ import { v4 as uuidv4 } from 'uuid';
 import { validate } from 'uuid';
 import { UpdateUserDto } from './update-user.dto';
 import { database } from 'src/database/database';
+import { resolveNaptr } from 'dns';
 @Injectable()
 export class UserService {
   getAll() {
@@ -43,27 +44,36 @@ export class UserService {
   updateUserById(id: string, dto: UpdateUserDto) {
     if (!validate(id)) throw new BadRequestException('invalid id');
 
-    if (!(dto?.oldPassword && dto?.newPassword))
+    if (
+      !(dto.oldPassword && dto.newPassword) ||
+      typeof dto.oldPassword !== 'string' ||
+      typeof dto.newPassword !== 'string'
+    ) {
       throw new BadRequestException('invalid dto');
-
+    }
     const index = database.users.findIndex((user) => user.id === id);
     if (index === -1) throw new NotFoundException('user not found');
+
     const user = database.users.find((user) => user.id === id);
 
-    if (dto?.oldPassword !== user?.password)
+    if (dto.oldPassword === user.password) {
+      const newUserData = {
+        user: user.id,
+        login: user.login,
+        password: dto.newPassword,
+        createdAt: user.createdAt,
+        updatedAt: Date.now(),
+        version: user.version++,
+      };
+
+      database.users[index] = newUserData;
+      const resp = { ...newUserData };
+
+      delete resp.password;
+      return resp;
+    } else {
       throw new ForbiddenException('wrong password');
-
-    const newUserData = {
-      ...user,
-      password: dto.newPassword,
-      updatedAt: Date.now(),
-      version: (user.version += 1),
-    };
-
-    database.users[index] = newUserData;
-
-    delete newUserData.password;
-    return newUserData;
+    }
   }
 
   deleteUserById(id: string) {

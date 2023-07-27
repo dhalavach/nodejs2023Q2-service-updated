@@ -14,7 +14,6 @@ import { FavoritesService } from './favorites.service';
 export class FavoritesController {
   constructor(private readonly FavoritesService: FavoritesService) {}
 
-  @HttpCode(200)
   @Get()
   getAll() {
     return this.FavoritesService.getAll();

@@ -80,7 +80,7 @@ export class TrackService {
     const index = database.tracks.findIndex((track) => track.id === id);
 
     database.tracks[index] = newTrackData;
-    return index;
+    return database.tracks[index];
   }
 
   deleteTrackById(id: string) {

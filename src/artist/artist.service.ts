@@ -4,13 +4,11 @@ import {
   Injectable,
   NotFoundException,
 } from '@nestjs/common';
-import { PrismaClient } from '@prisma/client';
 import { CreateArtistDto } from './create-artist.dto';
 import { v4 as uuidv4 } from 'uuid';
 import { validate } from 'uuid';
 import { UpdateArtistDto } from './update-artist.dto';
 import { database } from 'src/database/database';
-const prisma = new PrismaClient();
 @Injectable()
 export class ArtistService {
   getAll() {
@@ -59,7 +57,7 @@ export class ArtistService {
     };
     try {
       database.artists[index] = newArtistData;
-      return true;
+      return database.artists[index];
     } catch (err) {
       console.log(err);
       return false;
@@ -72,12 +70,13 @@ export class ArtistService {
     if (index === -1) throw new NotFoundException('artist not found');
 
     database.albums.forEach((album) => {
-      if (album.artistId === id) album.artistId === null;
+      if (album.artistId === id) album.artistId = null;
     });
     database.tracks.forEach((track) => {
-      if (track.artistId === id) track.artistId === null;
+      if (track.artistId === id) track.artistId = null;
     });
 
-    database.artists = database.artists.filter((artist) => artist.id !== id);
+    database.artists.splice(index, 1);
+    return;
   }
 }

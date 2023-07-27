@@ -20,7 +20,7 @@ export class AlbumService {
     private readonly artistService: ArtistService,
   ) {}
 
-  async getAll() {
+  getAll() {
     return database.albums;
   }
 
@@ -33,16 +33,24 @@ export class AlbumService {
   }
 
   createAlbum(dto: CreateAlbumDto) {
-    if (!(dto?.name && dto?.year)) {
+    if (
+      !(dto?.name && dto?.year) ||
+      (dto.artistId !== null && typeof dto.artistId !== 'string')
+    ) {
       throw new BadRequestException('dto missing required fields');
     } else {
+      const validatedArtistId =
+        dto.artistId && this.artistService.getArtistById(dto.artistId)
+          ? dto.artistId
+          : null;
       const albumData = {
         id: uuidv4(),
         name: dto.name,
         year: dto.year,
-        artistId: dto.artistId,
+        artistId: validatedArtistId,
       };
       database.albums.push(albumData);
+      return albumData;
     }
   }
 
@@ -54,33 +62,43 @@ export class AlbumService {
 
     if (
       (!dto?.name && !dto?.year && !dto?.artistId) ||
-      (dto?.name && typeof dto?.name !== 'string') ||
-      (dto?.year && typeof dto?.year !== 'number') ||
-      (dto?.artistId && typeof dto?.artistId !== 'string')
+      (dto.name && typeof dto.name !== 'string') ||
+      (dto.year && typeof dto.year !== 'number') ||
+      (dto.artistId && typeof dto.artistId !== 'string')
     )
       throw new BadRequestException('invalid dto');
-    const album = database.albums.find((album) => album.id === id);
+    const album = database.albums[index];
+    const validatedArtistId =
+      dto.artistId && this.artistService.getArtistById(dto.artistId)
+        ? dto.artistId
+        : null;
     const newAlbumData = {
-      ...album,
-      name: dto?.name,
-      year: dto?.year,
-      artistId: dto?.artistId,
+      id: album.id,
+      name: dto.name || album.name,
+      year: dto.year || album.year,
+      artistId: validatedArtistId,
     };
 
     database.albums[index] = newAlbumData;
-    return newAlbumData;
+    return database.albums[index];
   }
 
   deleteAlbumById(id: string) {
-    if (validate(id) === false) throw new BadRequestException('invalid id');
-    const index = database.albums.findIndex((album) => album.id === id);
-    if (index === -1) throw new NotFoundException('album not found');
+    if (validate(id)) {
+      const index = database.albums.findIndex((album) => album.id === id);
+      if (index === -1) throw new NotFoundException('album not found');
 
-    database.tracks.forEach((track) => {
-      if (track.albumId === id) track.albumId === null;
-    });
-    database.favorites.albums = database.albums.filter((album) => album !== id);
-    database.albums = database.albums.filter((album) => album !== id);
-    return true;
+      database.tracks.forEach((track) => {
+        if (track.albumId === id) track.albumId = null;
+      });
+      database.favorites.albums = database.albums.filter(
+        (album) => album !== id,
+      );
+      // database.albums = database.albums.filter((album) => album.id !== id);
+      database.albums.splice(index, 1);
+      return;
+    } else {
+      throw new BadRequestException('invalid id');
+    }
   }
 }
