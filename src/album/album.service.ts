@@ -10,47 +10,63 @@ import { v4 as uuidv4 } from 'uuid';
 import { validate } from 'uuid';
 import { UpdateAlbumDto } from './update-album.dto';
 import { database } from 'src/database/database';
-import { ArtistService } from 'src/artist/artist.service';
 
 @Injectable()
 export class AlbumService {
-  constructor(
-    @Inject(forwardRef(() => ArtistService))
-    private readonly artistService: ArtistService,
-  ) {}
-
   getAll() {
     return database.albums;
   }
 
   getAlbumById(id: string) {
-    if (validate(id)) {
-      const album = database.albums.find((album) => album.id === id);
-      if (album) return album;
-      else throw new NotFoundException('album not found');
-    } else throw new BadRequestException('invalid id');
+    if (!validate(id)) throw new BadRequestException('invalid id');
+    const album = database.albums.find((album) => album.id === id);
+    if (!album) throw new NotFoundException('album not found');
+    else return album;
   }
+  // createAlbum(dto: CreateAlbumDto) {
+  //   if (
+  //     !(dto?.name && dto?.year) ||
+  //     (dto.artistId !== null && typeof dto.artistId !== 'string')
+  //   ) {
+  //     throw new BadRequestException('dto missing required fields');
+  //   } else {
+  //     const validatedArtistId =
+  //       dto.artistId && this.artistService.getArtistById(dto.artistId)
+  //         ? dto.artistId
+  //         : null;
+  //     const albumData = {
+  //       id: uuidv4(),
+  //       name: dto.name,
+  //       year: dto.year,
+  //       artistId: validatedArtistId,
+  //     };
+  //     database.albums.push(albumData);
+  //     return albumData;
+  //   }
+  // }
 
   createAlbum(dto: CreateAlbumDto) {
-    if (
-      !(dto?.name && dto?.year) ||
-      (dto.artistId !== null && typeof dto.artistId !== 'string')
-    ) {
-      throw new BadRequestException('dto missing required fields');
-    } else {
-      const validatedArtistId =
-        dto.artistId && this.artistService.getArtistById(dto.artistId)
-          ? dto.artistId
-          : null;
-      const albumData = {
-        id: uuidv4(),
-        name: dto.name,
-        year: dto.year,
-        artistId: validatedArtistId,
-      };
-      database.albums.push(albumData);
-      return albumData;
+    if (!dto || typeof dto.name !== 'string' || typeof dto.year !== 'number') {
+      throw new BadRequestException('invalid dto');
     }
+
+    if (typeof dto.artistId !== 'string' && dto.artistId !== null) {
+      throw new BadRequestException('invalid dto');
+    }
+
+    const validatedArtistId =
+      dto.artistId && database.artists.find((a) => a.id === dto.artistId)
+        ? dto.artistId
+        : null;
+
+    const albumData = {
+      id: uuidv4(),
+      name: dto.name,
+      year: dto.year,
+      artistId: validatedArtistId,
+    };
+    database.albums.push(albumData);
+    return albumData;
   }
 
   updateAlbumById(id: string, dto: UpdateAlbumDto) {
@@ -68,7 +84,7 @@ export class AlbumService {
       throw new BadRequestException('invalid dto');
     const album = database.albums[index];
     const validatedArtistId =
-      dto.artistId && this.artistService.getArtistById(dto.artistId)
+      dto.artistId && database.artists.find((a) => a.id === dto.artistId)
         ? dto.artistId
         : null;
     const newAlbumData = {

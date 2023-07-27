@@ -9,6 +9,7 @@ import { v4 as uuidv4 } from 'uuid';
 import { validate } from 'uuid';
 import { UpdateArtistDto } from './update-artist.dto';
 import { database } from 'src/database/database';
+
 @Injectable()
 export class ArtistService {
   getAll() {
