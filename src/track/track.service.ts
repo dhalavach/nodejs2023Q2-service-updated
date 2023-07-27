@@ -1,28 +1,16 @@
 import {
   BadRequestException,
-  ForbiddenException,
-  Inject,
   Injectable,
   NotFoundException,
-  forwardRef,
 } from '@nestjs/common';
 import { CreateTrackDto } from './create-track.dto';
 import { v4 as uuidv4 } from 'uuid';
 import { validate } from 'uuid';
 import { UpdateTrackDto } from './update-track.dto';
 import { database } from 'src/database/database';
-import { AlbumService } from 'src/album/album.service';
-import { ArtistService } from 'src/artist/artist.service';
 
 @Injectable()
 export class TrackService {
-  constructor(
-    @Inject(forwardRef(() => AlbumService))
-    private readonly albumService: AlbumService,
-    @Inject(forwardRef(() => ArtistService))
-    private readonly artistService: ArtistService,
-  ) {}
-
   getAll() {
     return database.tracks;
   }

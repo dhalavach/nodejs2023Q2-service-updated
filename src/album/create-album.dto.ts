@@ -1,4 +1,4 @@
-import { IsString, IsNotEmpty, IsBoolean, IsNumber } from 'class-validator';
+import { IsString, IsNotEmpty, IsNumber } from 'class-validator';
 
 export class CreateAlbumDto {
   @IsString()

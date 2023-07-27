@@ -9,7 +9,6 @@ import { v4 as uuidv4 } from 'uuid';
 import { validate } from 'uuid';
 import { UpdateUserDto } from './update-user.dto';
 import { database } from 'src/database/database';
-import { resolveNaptr } from 'dns';
 @Injectable()
 export class UserService {
   getAll() {
@@ -79,7 +78,7 @@ export class UserService {
     const index = database.users.findIndex((user) => user.id === id);
     if (index === -1) throw new NotFoundException('user not found');
 
-    database.users.splice(index, 1); //check
+    database.users.splice(index, 1);
     return 'user deleted';
   }
 }
