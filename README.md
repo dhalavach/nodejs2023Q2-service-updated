@@ -31,17 +31,22 @@ npm install --force
 - run
 
 ```
-docker compose up app -d
+docker compose up app -d --build
 
 ```
 
-### Prisma
+### Prisma - important step!
 
-- run
+- after starting the container, generate PrismaClient for Linux inside the container:
+
+```
+docker-compose -f docker-compose.yml exec app npx prisma generate
+```
+Then run
 
 ```
 npx prisma generate
-npx prisma migrate dev
+docker-compose -f docker-compose.yml exec app npx prisma migrate dev
 
 ```
 

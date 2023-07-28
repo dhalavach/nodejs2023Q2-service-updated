@@ -1,18 +1,46 @@
 version: '3.9'
 services:
   app:
-    image: postgres:13
+    container_name: nodejs
+    build: .
+    restart: always
     ports:
-      - 5434:5432
+      - 5000:5000
+    depends_on:
+      - postgres
+    volumes:
+      - ./:/app
+      - ignore:/app/node_modules/
     environment:
       POSTGRES_USER: johndoe
       POSTGRES_PASSWORD: 12345
-      POSTGRES_DB: nest
-  test-db:
-    image: postgres:13
+      POSTGRES_DB: postgres
+      POSTGRES_PORT: 5432
+      POSTGRES_HOST: postgres
+    networks:
+      - postgres
+
+  postgres:
+    container_name: postgres-db
+    image: postgres
+    restart: always
     ports:
-      - 5435:5432
+      - 5432:5432
     environment:
       POSTGRES_USER: johndoe
       POSTGRES_PASSWORD: 12345
-      POSTGRES_DB: nest
+      POSTGRES_DB: postgres
+      PGDATA: /var/lib/postgresql/data
+    volumes:
+      - /var/lib/postgresql/data
+    networks:
+      - postgres
+
+networks:
+  postgres:
+    driver: bridge
+
+volumes:
+  app:
+  ignore:
+  postgres:
