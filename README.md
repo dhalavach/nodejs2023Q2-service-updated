@@ -45,7 +45,6 @@ docker-compose -f docker-compose.yml exec app npx prisma generate
 Then run
 
 ```
-npx prisma generate
 docker-compose -f docker-compose.yml exec app npx prisma migrate dev
 
 ```
@@ -53,7 +52,7 @@ docker-compose -f docker-compose.yml exec app npx prisma migrate dev
 - if necessary, reset the database:
 
 ```
-npx prisma migrate reset
+docker-compose -f docker-compose.yml exec app npx prisma migrate reset
 
 ```
 
