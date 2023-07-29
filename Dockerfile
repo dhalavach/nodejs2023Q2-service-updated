@@ -1,11 +1,11 @@
-FROM node:lts-bullseye-slim as builder
+FROM node:18-alpine3.17 as builder
 COPY . /app
 WORKDIR /app
 RUN npm install
 RUN npm run build
 
 
-FROM node:lts-bullseye-slim as runner
+FROM node:18-alpine3.17 as runner
 WORKDIR /app
 COPY package.json /app
 COPY --from=builder /app/dist /app
