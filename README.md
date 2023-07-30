@@ -8,7 +8,7 @@
 ## Downloading
 
 ```
-git clone https://github.com/dhalavach/nodejs2023Q2-service/tree/task1
+git clone git@github.com:dhalavach/nodejs2023Q2-service.git
 ```
 
 ## Switch to task1 branch
