@@ -43,9 +43,9 @@ After starting the app on port (5000 as default) you can test the app
 
 ## Testing~
 
-After running npm start, open a new terminal to run tests
+- After running npm start, open a new terminal to run tests
 
-To run all tests
+- To run all tests
 
 ```
 npm run test
@@ -60,3 +60,8 @@ npm run lint
 ```
 npm run format
 ```
+
+### Swagger
+
+- open in browser http://localhost:5000/doc/
+- replace 5000 in the address above with your .env port, if necessary
