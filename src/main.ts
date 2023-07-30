@@ -6,6 +6,10 @@ import { dirname } from 'path';
 import { parse } from 'yaml';
 import { OpenAPIObject, SwaggerModule } from '@nestjs/swagger';
 import { ValidationPipe } from '@nestjs/common';
+import { config } from 'dotenv';
+
+config();
+
 const port = process.env.PORT || 5000;
 
 async function bootstrap() {
