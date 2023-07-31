@@ -8,7 +8,7 @@
 ## Downloading
 
 ```
-git clone git@github.com:dhalavach/nodejs2023Q2-service-updated.git
+git clone git@github.com:dhalavach/nodejs2023Q2-service.git
 ```
 
 ## Switch to develop branch
@@ -41,7 +41,7 @@ npm start
 
 After starting the app on port (5000 as default) you can test the app
 
-## Testing~
+## Testing
 
 - After running npm start, open a new terminal to run tests
 
