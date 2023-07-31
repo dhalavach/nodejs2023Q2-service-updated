@@ -8,13 +8,13 @@
 ## Downloading
 
 ```
-git clone git@github.com:dhalavach/nodejs2023Q2-service.git
+git clone git@github.com:dhalavach/nodejs2023Q2-service-updated.git
 ```
 
-## Switch to task1 branch
+## Switch to develop branch
 
 ```
-git checkout task1
+git checkout develop 
 ```
 
 ### Create .env
