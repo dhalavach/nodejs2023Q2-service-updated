@@ -1,5 +1,5 @@
 FROM node:18-alpine3.17 as builder
-COPY . /app
+ADD . /app
 WORKDIR /app
 RUN npm install
 RUN npm run build
@@ -11,4 +11,4 @@ COPY package.json /app
 COPY /prisma /app 
 COPY --from=builder /app/dist /app
 EXPOSE 5000
-CMD npx prisma migrate dev && npm run start 
+CMD npx prisma migrate dev && npm run start:prod

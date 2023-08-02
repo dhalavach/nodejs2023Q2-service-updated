@@ -35,7 +35,7 @@ docker compose up app -d --build
 
 ```
 
-### Prisma - important step!
+### Prisma - optional - only if you encounter errors
 
 - after starting the container, generate PrismaClient for Linux inside the container:
 
@@ -85,3 +85,7 @@ npm run format
 ```
 
 -- if you have any questions please contact me at halavach@protonmail.com or Discord (@dhalavach)
+
+### Docker Hub
+--- the images are available on Docker Hub. Please search for kopfmann/kopfmann/nodejs2023q2-service-app  and   kopfmann/nodejs2023q2-service-postgres
+--- Please use the images you have built for testing, Docker Hub upload is only to fulfil the task requirement, I have not tested them

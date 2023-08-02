@@ -21,6 +21,7 @@ export class UserService {
 
     if (!(await prisma.user.findFirst({ where: { id: id } })))
       throw new NotFoundException('user not found');
+    console.log('testing reload');
 
     return await prisma.user.findFirst({
       where: {
