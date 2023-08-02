@@ -28,12 +28,14 @@ npm install --force
 
 - download, install, and launch Docker
 
-- run
+- Build images and start containers. Run
 
 ```
 docker compose up app -d --build
 
 ```
+
+- Occasionally, the app takes some time to start insided the docker container, please wait a little if you encounter "socket hang up" error during tests (you can check the container's log in docker desktop to make sure that the app has started).
 
 ### Prisma - optional - only if you encounter errors
 
@@ -42,6 +44,7 @@ docker compose up app -d --build
 ```
 docker-compose -f docker-compose.yml exec app npx prisma generate
 ```
+
 Then run
 
 ```
@@ -72,6 +75,8 @@ Start the app, open new terminal and enter:
 npm run test
 ```
 
+- Occasionally, the app takes some time to start insided the docker container, please wait a little if you encounter "socket hang up" error during tests (you can check the container's log in docker desktop to make sure that the app has started)
+
 ### Auto-fix and format
 
 - Please ignore eslint warnings, for now
@@ -87,5 +92,15 @@ npm run format
 -- if you have any questions please contact me at halavach@protonmail.com or Discord (@dhalavach)
 
 ### Docker Hub
---- the images are available on Docker Hub. Please search for kopfmann/kopfmann/nodejs2023q2-service-app  and   kopfmann/nodejs2023q2-service-postgres
+
+--- the images are available on Docker Hub. Please search for kopfmann/kopfmann/nodejs2023q2-service-app and kopfmann/nodejs2023q2-service-postgres
 --- Please use the images you have built for testing, Docker Hub upload is only to fulfil the task requirement, I have not tested them
+
+### Vulnerabilities scan
+
+-- After you have built the images with docker compose up app -d --build
+you can scan them for vulnerabiities and recommendations using Docker Scout. Run
+
+```
+npm run docker:scan
+```
