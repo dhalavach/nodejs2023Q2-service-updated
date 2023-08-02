@@ -3,26 +3,18 @@ import {
   Injectable,
   NotFoundException,
   UnprocessableEntityException,
-  forwardRef,
 } from '@nestjs/common';
-import { Inject } from '@nestjs/common/decorators';
 import { v4 as uuidv4 } from 'uuid';
 
 import { PrismaClient } from '@prisma/client';
-import { AlbumService } from 'src/album/album.service';
-import { ArtistService } from 'src/artist/artist.service';
-import { TrackService } from 'src/track/track.service';
 import { validate } from 'uuid';
-import { Album } from 'src/album';
-import { FavoritesData } from 'src/types/types';
 const prisma = new PrismaClient();
 
 @Injectable()
 export class FavoritesService {
   async getAll() {
     const favs = await prisma.favorites.findFirst();
-    // console.log('FAVS: ' + favs);
-    // console.log('FAVS albums: ' + favs?.albums);
+
     if (!favs) return { artists: [], albums: [], tracks: [] };
 
     const tracks = await Promise.all(

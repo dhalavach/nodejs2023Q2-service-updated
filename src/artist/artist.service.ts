@@ -1,6 +1,5 @@
 import {
   BadRequestException,
-  ForbiddenException,
   Injectable,
   NotFoundException,
 } from '@nestjs/common';
@@ -71,7 +70,7 @@ export class ArtistService {
     if (!(await prisma.artist.findFirst({ where: { id: id } })))
       throw new NotFoundException('artist not found');
 
-    const updateAlbums = await prisma.album.updateMany({
+    await prisma.album.updateMany({
       where: {
         artistId: {
           equals: id,
@@ -82,7 +81,7 @@ export class ArtistService {
       },
     });
 
-    const updateTracks = await prisma.track.updateMany({
+    await prisma.track.updateMany({
       where: {
         artistId: {
           equals: id,

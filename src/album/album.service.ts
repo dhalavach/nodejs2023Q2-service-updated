@@ -1,6 +1,5 @@
 import {
   BadRequestException,
-  ForbiddenException,
   Injectable,
   NotFoundException,
 } from '@nestjs/common';
@@ -75,7 +74,7 @@ export class AlbumService {
     if (!(await prisma.album.findFirst({ where: { id: id } })))
       throw new NotFoundException('album not found');
 
-    const updateTracks = await prisma.track.updateMany({
+    await prisma.track.updateMany({
       where: {
         albumId: {
           equals: id,
