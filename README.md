@@ -1,10 +1,10 @@
-# Home Library Service - Prisma, Docker, and Postgres (part 2)
+# Home Library Service - Prisma, Postgres, and Docker (part 2)
 
 ## Prerequisites
 
 - Git - [Download & Install Git](https://git-scm.com/downloads).
-- Node.js - [Download & Install Node.js](https://nodejs.org/en/download/) and the npm package manager.
-- Docker
+- Node.js - [Download & Install Node.js LTS version](https://nodejs.org/en/download/) and the npm package manager.
+- Docker - [Download & Install Docker Desktop for Windows](https://docs.docker.com/desktop/install/windows-install/)
 
 ## Downloading
 
@@ -31,65 +31,33 @@ npm install --force
 - Build images and start containers. Run
 
 ```
-docker compose up app -d --build
+npm run docker
 
 ```
 
-- Occasionally, the app takes some time to start insided the docker container, please wait a little if you encounter "socket hang up" error during tests (you can check the container's log in docker desktop to make sure that the app has started).
-
-### Prisma - optional - only if you encounter errors
-
-- after starting the container, generate PrismaClient for Linux inside the container:
-
-```
-docker-compose -f docker-compose.yml exec app npx prisma generate
-```
-
-Then run
-
-```
-docker-compose -f docker-compose.yml exec app npx prisma migrate dev
-
-```
-
-- if necessary, reset the database:
-
-```
-docker-compose -f docker-compose.yml exec app npx prisma migrate reset
-
-```
-
-## Running application
-
-```
-npm start
-```
 
 After starting the app on port (5000 by default) you can open a separate terminal window and run the tests
 
 ## Testing
 
-Start the app, open new terminal and enter:
+After installing the dependencies, building the images, and starting the containers, open new terminal and run:
 
 ```
 npm run test
 ```
 
-- Occasionally, the app takes some time to start insided the docker container, please wait a little if you encounter "socket hang up" error during tests (you can check the container's log in docker desktop to make sure that the app has started)
+- Occasionally, the app takes some time to start inside the docker container, please wait a little if you encounter "socket hang up" error during tests (you can check the container's log in docker desktop to make sure that the app has started)
 
-### Auto-fix and format
+### Linter
 
-- Please ignore eslint warnings, for now
+- To check for warnings and errors run
 
 ```
 npm run lint
 ```
 
-```
-npm run format
-```
+- NB: false positive eslint warning with nest are a known bug, no-unused-vars gives an unneccessary warning in nest constructors
 
--- if you have any questions please contact me at halavach@protonmail.com or Discord (@dhalavach)
 
 ### Docker Hub
 
@@ -104,3 +72,6 @@ you can scan them for vulnerabiities and recommendations using Docker Scout. Run
 ```
 npm run docker:scan
 ```
+
+
+-- if you have any questions please contact me at halavach@protonmail.com or RS School Node.js Discord (@dhalavach). Cheers!

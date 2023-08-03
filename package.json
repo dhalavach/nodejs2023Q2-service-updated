@@ -6,7 +6,7 @@
   "private": true,
   "license": "UNLICENSED",
   "scripts": {
-    "docker": "nest build && docker compose up -d --build",
+    "docker": "docker compose up -d --build",
     "docker:scan": "docker scout recommendations nodejs2023q2-service-app && docker scout recommendations nodejs2023q2-service-postgres",
     "prebuild": "rimraf dist",
     "build": "nest build",
