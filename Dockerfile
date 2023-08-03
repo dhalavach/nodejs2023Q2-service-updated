@@ -13,6 +13,6 @@ COPY package*.json ./
 COPY doc doc
 COPY prisma prisma
 COPY --from=builder /app/dist/ dist/
-RUN npm install
+RUN npm install --omit=dev
 EXPOSE 5000
 CMD npx prisma migrate dev && node dist/main
