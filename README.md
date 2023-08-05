@@ -62,7 +62,27 @@ npm run lint
 ### Docker Hub
 
 --- the images are available on Docker Hub. Please search for kopfmann/kopfmann/nodejs2023q2-service-app and kopfmann/nodejs2023q2-service-postgres
---- Please use the images you have built for testing, Docker Hub upload is only to fulfil the task requirement, I have not tested them
+-- It is preferable to build images yourself by following the steps described above because at this stage the docker hub images behavior is flaky
+-- To test the app using Docker Hub images, pull the images and start the containers:
+
+```
+docker pull kopfmann/nodejs2023q2-service-postgres
+```
+```
+docker pull kopfmann/nodejs2023q2-service-app
+```
+
+```
+docker run -d --rm -e POSTGRES_USER=johndoe -e POSTGRES_PASSWORD=12345 -e POSGTRES_PORT=5432 --net postgres --name database kopfmann/nodejs2023q2-service-postgres
+```
+
+```
+ docker run -d --rm -p 5000:5000 --net postgres -e DATABASE_URL=postgresql://johndoe:12345@database:5432/postgres?schema=public --name library-service kopfmann/nodejs2023q2-service-app
+```
+-- then, open repo folder in terminal, install dependencies if you have not already and run
+```
+npm run test
+```
 
 ### Vulnerabilities scan
 
