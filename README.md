@@ -35,7 +35,6 @@ npm run docker
 
 ```
 
-
 After starting the app on port (5000 by default) you can open a separate terminal window and run the tests
 
 ## Testing
@@ -58,7 +57,6 @@ npm run lint
 
 - NB: false positive eslint warning with nest are a known bug, no-unused-vars gives an unneccessary warning in nest constructors
 
-
 ### Docker Hub
 
 --- the images are available on Docker Hub. Please search for kopfmann/kopfmann/nodejs2023q2-service-app and kopfmann/nodejs2023q2-service-postgres
@@ -68,8 +66,14 @@ npm run lint
 ```
 docker pull kopfmann/nodejs2023q2-service-postgres
 ```
+
 ```
 docker pull kopfmann/nodejs2023q2-service-app
+```
+
+```
+docker network create postgres
+
 ```
 
 ```
@@ -79,7 +83,9 @@ docker run -d --rm -e POSTGRES_USER=johndoe -e POSTGRES_PASSWORD=12345 -e POSGTR
 ```
  docker run -d --rm -p 5000:5000 --net postgres -e DATABASE_URL=postgresql://johndoe:12345@database:5432/postgres?schema=public --name library-service kopfmann/nodejs2023q2-service-app
 ```
+
 -- then, open repo folder in terminal, install dependencies if you have not already and run
+
 ```
 npm run test
 ```
@@ -92,6 +98,5 @@ you can scan them for vulnerabiities and recommendations using Docker Scout. Run
 ```
 npm run docker:scan
 ```
-
 
 -- if you have any questions please contact me at halavach@protonmail.com or RS School Node.js Discord (@dhalavach). Cheers!
