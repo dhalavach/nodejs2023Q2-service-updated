@@ -12,8 +12,9 @@
 git clone git@github.com:dhalavach/nodejs2023Q2-service.git
 ```
 
-## Installing NPM modules
+## Installing node modules
 
+Node modules are necessary for running tests. To install, run:
 ```
 npm install
 ```
@@ -28,10 +29,36 @@ npm install --force
 
 - download, install, and launch Docker
 
-- Build images and start containers. Run
+
+### Docker Hub
+
+--- the images are available on Docker Hub. Please search for kopfmann/kopfmann/nodejs2023q2-service-app and kopfmann/nodejs2023q2-service-postgres
+-- To test the app using Docker Hub images, pull the images and start the containers:
 
 ```
-npm run docker
+docker compose up -d
+```
+
+-- then, open repo folder in terminal, install dependencies if you have not already and run
+
+```
+npm run test
+```
+
+### Vulnerabilities scan
+
+-- After you have built the images with docker compose up app -d --build
+you can scan them for vulnerabiities and recommendations using Docker Scout. Run
+
+```
+npm run docker:scan
+```
+### Building images
+
+- To build images yourself, delete the docker-compose.yml and rename the docker-compose.example to docker-compose.yml. Then build images and start containers. Run
+
+```
+npm run docker:build
 
 ```
 
@@ -39,7 +66,7 @@ After starting the app on port (5000 by default) you can open a separate termina
 
 ## Testing
 
-After installing the dependencies, building the images, and starting the containers, open new terminal and run:
+After installing the dependencies, pulling or building the images, and starting the containers, open new terminal and run:
 
 ```
 npm run test
@@ -57,46 +84,12 @@ npm run lint
 
 - NB: false positive eslint warning with nest are a known bug, no-unused-vars gives an unneccessary warning in nest constructors
 
-### Docker Hub
+### Errors
 
---- the images are available on Docker Hub. Please search for kopfmann/kopfmann/nodejs2023q2-service-app and kopfmann/nodejs2023q2-service-postgres
--- It is preferable to build images yourself by following the steps described above because at this stage the docker hub images behavior is flaky
--- To test the app using Docker Hub images, pull the images and start the containers:
-
+- if you encounter errors, consider pruning the system and then pull or build images again
 ```
-docker pull kopfmann/nodejs2023q2-service-postgres
+docker system prune -a --volumes
 ```
-
-```
-docker pull kopfmann/nodejs2023q2-service-app
-```
-
-```
-docker network create postgres
-
-```
-
-```
-docker run -d --rm -e POSTGRES_USER=johndoe -e POSTGRES_PASSWORD=12345 -e POSGTRES_PORT=5432 --net postgres --name database kopfmann/nodejs2023q2-service-postgres
-```
-
-```
- docker run -d --rm -p 5000:5000 --net postgres -e DATABASE_URL=postgresql://johndoe:12345@database:5432/postgres?schema=public --name library-service kopfmann/nodejs2023q2-service-app
-```
-
--- then, open repo folder in terminal, install dependencies if you have not already and run
-
-```
-npm run test
-```
-
-### Vulnerabilities scan
-
--- After you have built the images with docker compose up app -d --build
-you can scan them for vulnerabiities and recommendations using Docker Scout. Run
-
-```
-npm run docker:scan
-```
+- WARNING: this will delete your unused images/containers and networks! run the command above only if you know what you are doing
 
 -- if you have any questions please contact me at halavach@protonmail.com or RS School Node.js Discord (@dhalavach). Cheers!
