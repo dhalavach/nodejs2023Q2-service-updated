@@ -12,7 +12,7 @@
 git clone git@github.com:dhalavach/nodejs2023Q2-service.git
 ```
 
---- switch to prisma-docker branch:
+- switch to prisma-docker branch:
 
 ```
 git checkout prisma-docker
