@@ -12,9 +12,16 @@
 git clone git@github.com:dhalavach/nodejs2023Q2-service.git
 ```
 
+--- switch to prisma-docker branch:
+
+```
+git checkout prisma-docker
+```
+
 ## Installing node modules
 
 Node modules are necessary for running tests. To install, run:
+
 ```
 npm install
 ```
@@ -28,7 +35,6 @@ npm install --force
 ### Docker
 
 - download, install, and launch Docker
-
 
 ### Docker Hub
 
@@ -53,6 +59,7 @@ you can scan them for vulnerabiities and recommendations using Docker Scout. Run
 ```
 npm run docker:scan
 ```
+
 ### Building images
 
 - To build images yourself, delete the docker-compose.yml and rename the docker-compose.example to docker-compose.yml. Then build images and start containers. Run
@@ -87,9 +94,11 @@ npm run lint
 ### Errors
 
 - if you encounter errors, consider pruning the system and then pull or build images again
+
 ```
 docker system prune -a --volumes
 ```
+
 - WARNING: this will delete your unused images/containers and networks! run the command above only if you know what you are doing
 
 -- if you have any questions please contact me at halavach@protonmail.com or RS School Node.js Discord (@dhalavach). Cheers!
