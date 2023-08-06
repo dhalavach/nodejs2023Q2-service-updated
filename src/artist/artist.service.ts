@@ -1,6 +1,7 @@
 import {
   BadRequestException,
   Injectable,
+  Logger,
   NotFoundException,
 } from '@nestjs/common';
 import { PrismaClient } from '@prisma/client';
@@ -11,7 +12,9 @@ import { UpdateArtistDto } from './update-artist.dto';
 const prisma = new PrismaClient();
 @Injectable()
 export class ArtistService {
+  private readonly logger = new Logger(ArtistService.name);
   async getAll() {
+    this.logger.log('getting all artists');
     return await prisma.artist.findMany();
   }
 
