@@ -12,7 +12,7 @@
 git clone git@github.com:dhalavach/nodejs2023Q2-service.git
 ```
 
-- switch to prisma-docker branch:
+switch to prisma-docker branch:
 
 ```
 git checkout prisma-docker
@@ -25,8 +25,7 @@ Node modules are necessary for running tests. To install, run:
 ```
 npm install
 ```
-
-- in the unlikely event of error during the installation process, run:
+in the unlikely event of error during the installation process, run:
 
 ```
 npm install --force
@@ -34,18 +33,17 @@ npm install --force
 
 ### Docker
 
-- download, install, and launch Docker
+download, install, and launch Docker
 
 ### Docker Hub
 
---- the images are available on Docker Hub. Please search for kopfmann/kopfmann/nodejs2023q2-service-app and kopfmann/nodejs2023q2-service-postgres
--- To test the app using Docker Hub images, pull the images and start the containers:
+the images are available on Docker Hub. Please search for kopfmann/kopfmann/nodejs2023q2-service-app and kopfmann/nodejs2023q2-service-postgres. To test the app using Docker Hub images, pull the images and start the containers:
 
 ```
 docker compose up -d
 ```
 
--- then, open repo folder in terminal, install dependencies if you have not already and run
+then, open repo folder in terminal, install dependencies if you have not already and run
 
 ```
 npm run test
@@ -53,7 +51,7 @@ npm run test
 
 ### Vulnerabilities scan
 
--- After you have built the images with docker compose up app -d --build
+After you have built the images with docker compose up app -d --build
 you can scan them for vulnerabiities and recommendations using Docker Scout. Run
 
 ```
@@ -62,7 +60,7 @@ npm run docker:scan
 
 ### Building images
 
-- To build images yourself, delete the docker-compose.yml and rename the docker-compose.example to docker-compose.yml. Then build images and start containers. Run
+To build images yourself, delete the docker-compose.yml and rename the docker-compose.example to docker-compose.yml. Then build images and start containers. Run
 
 ```
 npm run docker:build
@@ -79,26 +77,26 @@ After installing the dependencies, pulling or building the images, and starting 
 npm run test
 ```
 
-- Occasionally, the app takes some time to start inside the docker container, please wait a little if you encounter "socket hang up" error during tests (you can check the container's log in docker desktop to make sure that the app has started)
+Occasionally, the app takes some time to start inside the docker container, please wait a little if you encounter "socket hang up" error during tests (you can check the container's log in docker desktop to make sure that the app has started)
 
 ### Linter
 
-- To check for warnings and errors run
+To check for warnings and errors run
 
 ```
 npm run lint
 ```
 
-- NB: false positive eslint warning with nest are a known bug, no-unused-vars gives an unneccessary warning in nest constructors
+NB: false positive eslint warning with nest are a known bug, no-unused-vars gives an unneccessary warning in nest constructors
 
 ### Errors
 
-- if you encounter errors, consider pruning the system and then pull or build images again
+if you encounter errors, consider pruning the system and then pull or build images again
 
 ```
 docker system prune -a --volumes
 ```
 
-- WARNING: this will delete your unused images/containers and networks! run the command above only if you know what you are doing
+WARNING: this will delete your unused images/containers and networks! run the command above only if you know what you are doing
 
--- if you have any questions please contact me at halavach@protonmail.com or RS School Node.js Discord (@dhalavach). Cheers!
+if you have any questions please contact me at halavach@protonmail.com or RS School Node.js Discord (@dhalavach). Cheers!
