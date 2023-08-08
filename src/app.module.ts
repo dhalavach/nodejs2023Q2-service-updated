@@ -13,8 +13,8 @@ import { FavoritesModule } from './favorites/favorites.module';
 import { Favorites } from './favorites';
 import { Logger } from './log/logging-service';
 import { LoggerMiddleware } from './middleware/logger.middleware';
-import { AuthModule } from './auth/auth.module';
 import { PrismaModule } from './prisma/prisma.module';
+import { AuthModule } from './auth/auth.module';
 
 @Module({
   imports: [
