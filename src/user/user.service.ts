@@ -4,28 +4,42 @@ import {
   Injectable,
   NotFoundException,
 } from '@nestjs/common';
-import { PrismaClient } from '@prisma/client';
 import { CreateUserDto } from './create-user.dto';
 import { v4 as uuidv4 } from 'uuid';
 import { validate } from 'uuid';
 import { UpdateUserDto } from './update-user.dto';
-const prisma = new PrismaClient();
+import { PrismaService } from 'src/prisma/prisma.service';
+
 @Injectable()
 export class UserService {
+  constructor(private prisma: PrismaService) {}
+
   async getAll() {
-    return await prisma.user.findMany();
+    return await this.prisma.user.findMany();
   }
 
   async getUserById(id: string) {
     if (!validate(id)) throw new BadRequestException('invalid id');
 
-    if (!(await prisma.user.findFirst({ where: { id: id } })))
+    if (!(await this.prisma.user.findFirst({ where: { id: id } })))
       throw new NotFoundException('user not found');
     console.log('testing reload');
 
-    return await prisma.user.findFirst({
+    return await this.prisma.user.findFirst({
       where: {
         id: id,
+      },
+    });
+  }
+
+  async getUserByLogin(login: string) {
+    if (!login) throw new BadRequestException('invalid login!');
+    if (!(await this.prisma.user.findFirst({ where: { login: login } })))
+      throw new NotFoundException('user not found');
+
+    return await this.prisma.user.findFirst({
+      where: {
+        login: login,
       },
     });
   }
@@ -42,7 +56,7 @@ export class UserService {
       createdAt: Number(Date.now()),
       updatedAt: Number(Date.now()),
     };
-    await prisma.user.create({
+    await this.prisma.user.create({
       data: userData,
     });
     delete userData.password;
@@ -55,7 +69,7 @@ export class UserService {
     if (!(dto?.oldPassword && dto?.newPassword))
       throw new BadRequestException('invalid dto');
 
-    const user = await prisma.user.findFirst({ where: { id: id } });
+    const user = await this.prisma.user.findFirst({ where: { id: id } });
     if (!user) throw new NotFoundException('user not found');
 
     if (dto.oldPassword !== user.password)
@@ -68,7 +82,7 @@ export class UserService {
       version: (user.version += 1),
     };
 
-    await prisma.user.update({
+    await this.prisma.user.update({
       where: {
         id: id,
       },
@@ -82,10 +96,10 @@ export class UserService {
   async deleteUserById(id: string) {
     if (!validate(id)) throw new BadRequestException('invalid id');
 
-    if (!(await prisma.user.findFirst({ where: { id: id } })))
+    if (!(await this.prisma.user.findFirst({ where: { id: id } })))
       throw new NotFoundException('user not found');
 
-    return await prisma.user.delete({
+    return await this.prisma.user.delete({
       where: {
         id: id,
       },

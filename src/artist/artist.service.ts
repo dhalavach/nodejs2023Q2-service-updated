@@ -4,23 +4,25 @@ import {
   Logger,
   NotFoundException,
 } from '@nestjs/common';
-import { PrismaClient } from '@prisma/client';
 import { CreateArtistDto } from './create-artist.dto';
 import { v4 as uuidv4 } from 'uuid';
 import { validate } from 'uuid';
 import { UpdateArtistDto } from './update-artist.dto';
-const prisma = new PrismaClient();
+import { PrismaService } from 'src/prisma/prisma.service';
+
 @Injectable()
 export class ArtistService {
+  constructor(private prisma: PrismaService) {}
+
   private readonly logger = new Logger(ArtistService.name);
   async getAll() {
     this.logger.log('getting all artists');
-    return await prisma.artist.findMany();
+    return await this.prisma.artist.findMany();
   }
 
   async getArtistById(id: string) {
     if (!validate(id)) throw new BadRequestException('invalid id');
-    const artist = await prisma.artist.findFirst({ where: { id: id } });
+    const artist = await this.prisma.artist.findFirst({ where: { id: id } });
     if (!artist) throw new NotFoundException('artist not found');
     else return artist;
   }
@@ -34,7 +36,7 @@ export class ArtistService {
         name: dto.name,
         grammy: dto.grammy,
       };
-      return await prisma.artist.create({
+      return await this.prisma.artist.create({
         data: artistData,
       });
     }
@@ -43,7 +45,7 @@ export class ArtistService {
   async updateArtistById(id: string, dto: UpdateArtistDto) {
     if (!validate(id)) throw new BadRequestException('invalid id');
 
-    const artist = await prisma.artist.findFirst({ where: { id: id } });
+    const artist = await this.prisma.artist.findFirst({ where: { id: id } });
     if (!artist) throw new NotFoundException('artist not found');
 
     if (
@@ -59,7 +61,7 @@ export class ArtistService {
       grammy: dto.grammy,
     };
 
-    return await prisma.artist.update({
+    return await this.prisma.artist.update({
       where: {
         id: id,
       },
@@ -70,10 +72,10 @@ export class ArtistService {
   async deleteArtistById(id: string) {
     if (!validate(id)) throw new BadRequestException('invalid id');
 
-    if (!(await prisma.artist.findFirst({ where: { id: id } })))
+    if (!(await this.prisma.artist.findFirst({ where: { id: id } })))
       throw new NotFoundException('artist not found');
 
-    await prisma.album.updateMany({
+    await this.prisma.album.updateMany({
       where: {
         artistId: {
           equals: id,
@@ -84,7 +86,7 @@ export class ArtistService {
       },
     });
 
-    await prisma.track.updateMany({
+    await this.prisma.track.updateMany({
       where: {
         artistId: {
           equals: id,
@@ -95,7 +97,7 @@ export class ArtistService {
       },
     });
 
-    return await prisma.artist.delete({
+    return await this.prisma.artist.delete({
       where: {
         id: id,
       },

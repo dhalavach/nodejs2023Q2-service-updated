@@ -3,22 +3,23 @@ import {
   Injectable,
   NotFoundException,
 } from '@nestjs/common';
-import { PrismaClient } from '@prisma/client';
 import { CreateTrackDto } from './create-track.dto';
 import { v4 as uuidv4 } from 'uuid';
 import { validate } from 'uuid';
 import { UpdateTrackDto } from './update-track.dto';
-const prisma = new PrismaClient();
+import { PrismaService } from 'src/prisma/prisma.service';
 
 @Injectable()
 export class TrackService {
+  constructor(private prisma: PrismaService) {}
+
   async getAll() {
-    return await prisma.track.findMany();
+    return await this.prisma.track.findMany();
   }
 
   async getTrackById(id: string) {
     if (!validate(id)) throw new BadRequestException('invalid id');
-    const track = await prisma.track.findFirst({ where: { id: id } });
+    const track = await this.prisma.track.findFirst({ where: { id: id } });
     if (!track) throw new NotFoundException('track not found');
     else return track;
   }
@@ -34,7 +35,7 @@ export class TrackService {
         artistId: dto?.artistId,
         albumId: dto?.albumId,
       };
-      return await prisma.track.create({
+      return await this.prisma.track.create({
         data: trackData,
       });
     }
@@ -43,7 +44,7 @@ export class TrackService {
   async updateTrackById(id: string, dto: UpdateTrackDto) {
     if (!validate(id)) throw new BadRequestException('invalid id');
 
-    const track = await prisma.track.findFirst({ where: { id: id } });
+    const track = await this.prisma.track.findFirst({ where: { id: id } });
     if (!track) throw new NotFoundException('track not found');
 
     if (
@@ -63,7 +64,7 @@ export class TrackService {
       albumId: dto?.albumId,
     };
 
-    return await prisma.track.update({
+    return await this.prisma.track.update({
       where: {
         id: id,
       },
@@ -74,10 +75,10 @@ export class TrackService {
   async deleteTrackById(id: string) {
     if (!validate(id)) throw new BadRequestException('invalid id');
 
-    if (!(await prisma.track.findFirst({ where: { id: id } })))
+    if (!(await this.prisma.track.findFirst({ where: { id: id } })))
       throw new NotFoundException('track not found');
 
-    return await prisma.track.delete({
+    return await this.prisma.track.delete({
       where: {
         id: id,
       },

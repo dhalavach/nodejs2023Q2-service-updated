@@ -13,6 +13,8 @@ import { FavoritesModule } from './favorites/favorites.module';
 import { Favorites } from './favorites';
 import { Logger } from './log/logging-service';
 import { LoggerMiddleware } from './middleware/logger.middleware';
+import { AuthModule } from './auth/auth.module';
+import { PrismaModule } from './prisma/prisma.module';
 
 @Module({
   imports: [
@@ -21,6 +23,8 @@ import { LoggerMiddleware } from './middleware/logger.middleware';
     AlbumModule,
     TrackModule,
     FavoritesModule,
+    AuthModule,
+    PrismaModule,
   ],
   controllers: [AppController],
   providers: [AppService, User, Artist, Album, Track, Favorites, Logger],

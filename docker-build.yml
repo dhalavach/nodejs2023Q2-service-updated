@@ -34,19 +34,6 @@ services:
       PGDATA: /var/lib/postgresql/data
     volumes:
       - /var/lib/postgresql/data
-    command:
-      [
-        'postgres',
-        '-c',
-        'logging_collector=on',
-        '-c',
-        'log_directory=./',
-        '-c',
-        'log_filename=postgres.log',
-        '-c',
-        'log_statement=all',
-      ]
-
     networks:
       - postgres
 
