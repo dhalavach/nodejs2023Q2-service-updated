@@ -14,6 +14,7 @@ export class TrackService {
   constructor(private prisma: PrismaService) {}
 
   async getAll() {
+    console.log('getting tracks');
     return await this.prisma.track.findMany();
   }
 

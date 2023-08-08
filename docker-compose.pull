@@ -2,7 +2,7 @@ version: '3.9'
 services:
   app:
     container_name: nodejs
-    build: .
+    image: kopfmann/nodejs2023q2-service-app
     restart: always
     ports:
       - ${PORT}:${PORT}
@@ -22,7 +22,7 @@ services:
 
   postgres:
     container_name: postgres-db
-    build: ./src/database
+    image: kopfmann/nodejs2023q2-service-postgres
     restart: always
     ports:
       - ${POSTGRES_PORT}:${POSTGRES_PORT}

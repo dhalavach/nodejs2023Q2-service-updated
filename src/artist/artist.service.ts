@@ -7,7 +7,7 @@ import { CreateArtistDto } from './create-artist.dto';
 import { v4 as uuidv4 } from 'uuid';
 import { validate } from 'uuid';
 import { UpdateArtistDto } from './update-artist.dto';
-import { PrismaService } from 'src/prisma/prisma.service';
+import { PrismaService } from '../prisma/prisma.service';
 
 @Injectable()
 export class ArtistService {

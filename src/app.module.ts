@@ -12,6 +12,12 @@ import { Track } from './track';
 import { FavoritesModule } from './favorites/favorites.module';
 import { Favorites } from './favorites';
 import { PrismaModule } from './prisma/prisma.module';
+import { UserService } from './user/user.service';
+import { ArtistService } from './artist/artist.service';
+import { AlbumService } from './album/album.service';
+import { TrackService } from './track/track.service';
+import { FavoritesService } from './favorites/favorites.service';
+import { PrismaService } from './prisma/prisma.service';
 
 @Module({
   imports: [
@@ -23,6 +29,14 @@ import { PrismaModule } from './prisma/prisma.module';
     PrismaModule,
   ],
   controllers: [AppController],
-  providers: [AppService, User, Artist, Album, Track, Favorites],
+  providers: [
+    AppService,
+    UserService,
+    ArtistService,
+    AlbumService,
+    TrackService,
+    FavoritesService,
+    PrismaService,
+  ],
 })
 export class AppModule {}

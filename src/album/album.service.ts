@@ -7,7 +7,7 @@ import { CreateAlbumDto } from './create-album.dto';
 import { v4 as uuidv4 } from 'uuid';
 import { validate } from 'uuid';
 import { UpdateAlbumDto } from './update-album.dto';
-import { PrismaService } from 'src/prisma/prisma.service';
+import { PrismaService } from '../prisma/prisma.service';
 
 @Injectable()
 export class AlbumService {

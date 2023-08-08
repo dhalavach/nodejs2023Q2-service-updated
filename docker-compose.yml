@@ -2,7 +2,8 @@ version: '3.9'
 services:
   app:
     container_name: nodejs
-    image: kopfmann/nodejs2023q2-service-app
+    build:
+      context: .
     restart: always
     ports:
       - ${PORT}:${PORT}
@@ -10,6 +11,7 @@ services:
       - postgres
     volumes:
       - ./:/app
+      - ignore:/app/node_modules/
     environment:
       DATABASE_URL: ${DATABASE_URL}
       POSTGRES_USER: ${POSTGRES_USER}
@@ -22,7 +24,7 @@ services:
 
   postgres:
     container_name: postgres-db
-    image: kopfmann/nodejs2023q2-service-postgres
+    build: ./src/database
     restart: always
     ports:
       - ${POSTGRES_PORT}:${POSTGRES_PORT}
@@ -43,4 +45,5 @@ networks:
 
 volumes:
   app:
+  ignore:
   postgres:
