@@ -3,22 +3,23 @@ import {
   Injectable,
   NotFoundException,
 } from '@nestjs/common';
-import { PrismaClient } from '@prisma/client';
 import { CreateAlbumDto } from './create-album.dto';
 import { v4 as uuidv4 } from 'uuid';
 import { validate } from 'uuid';
 import { UpdateAlbumDto } from './update-album.dto';
-const prisma = new PrismaClient();
+import { PrismaService } from 'src/prisma/prisma.service';
 
 @Injectable()
 export class AlbumService {
+  constructor(private prisma: PrismaService) {}
+
   async getAll() {
-    return await prisma.album.findMany();
+    return await this.prisma.album.findMany();
   }
 
   async getAlbumById(id: string) {
     if (!validate(id)) throw new BadRequestException('invalid id');
-    const album = await prisma.album.findFirst({ where: { id: id } });
+    const album = await this.prisma.album.findFirst({ where: { id: id } });
     if (!album) throw new NotFoundException('album not found');
     else return album;
   }
@@ -33,7 +34,7 @@ export class AlbumService {
         year: dto.year,
         artistId: dto.artistId,
       };
-      return await prisma.album.create({
+      return await this.prisma.album.create({
         data: albumData,
       });
     }
@@ -42,7 +43,7 @@ export class AlbumService {
   async updateAlbumById(id: string, dto: UpdateAlbumDto) {
     if (!validate(id)) throw new BadRequestException('invalid id');
 
-    const album = await prisma.album.findFirst({ where: { id: id } });
+    const album = await this.prisma.album.findFirst({ where: { id: id } });
     if (!album) throw new NotFoundException('album not found');
 
     if (
@@ -60,7 +61,7 @@ export class AlbumService {
       artistId: dto?.artistId,
     };
 
-    return await prisma.album.update({
+    return await this.prisma.album.update({
       where: {
         id: id,
       },
@@ -71,10 +72,10 @@ export class AlbumService {
   async deleteAlbumById(id: string) {
     if (!validate(id)) throw new BadRequestException('invalid id');
 
-    if (!(await prisma.album.findFirst({ where: { id: id } })))
+    if (!(await this.prisma.album.findFirst({ where: { id: id } })))
       throw new NotFoundException('album not found');
 
-    await prisma.track.updateMany({
+    await this.prisma.track.updateMany({
       where: {
         albumId: {
           equals: id,
@@ -85,7 +86,7 @@ export class AlbumService {
       },
     });
 
-    return await prisma.album.delete({
+    return await this.prisma.album.delete({
       where: {
         id: id,
       },
