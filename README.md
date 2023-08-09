@@ -52,7 +52,7 @@ npm run test
 
 ### Vulnerabilities scan
 
-After you have built the images with docker compose up app -d --build
+After you have built the images with npm run docker:build
 you can scan them for vulnerabiities and recommendations using Docker Scout. Run
 
 ```
