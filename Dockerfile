@@ -1,11 +1,11 @@
 FROM node:18-alpine3.17 as builder
 WORKDIR /app
-COPY package*.json ./
+COPY package.json ./
 RUN npm install --omit=dev
 
 FROM node:18-alpine3.17 as runner
 WORKDIR /app
-COPY package*.json ./
+COPY package.json ./
 COPY tsconfig*.json ./
 COPY nest-cli.json ./
 COPY doc doc

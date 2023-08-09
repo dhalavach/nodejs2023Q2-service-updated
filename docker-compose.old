@@ -2,8 +2,7 @@ version: '3.9'
 services:
   app:
     container_name: nodejs
-    build:
-      context: .
+    image: kopfmann/homelibservice-slim-experimental3
     restart: always
     ports:
       - ${PORT}:${PORT}
@@ -15,9 +14,9 @@ services:
       DATABASE_URL: ${DATABASE_URL}
       POSTGRES_USER: ${POSTGRES_USER}
       POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
-      POSTGRES_DB: postgres
+      POSTGRES_DB: ${POSTGRES_DB}
       POSTGRES_PORT: ${POSTGRES_PORT}
-      POSTGRES_HOST: postgres
+      POSTGRES_HOST: ${POSTGRES_DB}
     networks:
       - postgres
 
@@ -29,8 +28,8 @@ services:
       - ${POSTGRES_PORT}:${POSTGRES_PORT}
     environment:
       POSTGRES_USER: ${POSTGRES_USER}
-      POSTGRES_PASSWORD: $POSTGRES_PASSWORD
-      POSTGRES_DB: postgres
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      POSTGRES_DB: ${POSTGRES_DB}
       POSTGRES_HOST_AUTH_METHOD: trust
       PGDATA: /var/lib/postgresql/data
     volumes:

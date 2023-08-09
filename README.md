@@ -37,7 +37,7 @@ download, install, and launch Docker
 
 ### Docker Hub
 
-the images are available on Docker Hub. Please search for kopfmann/kopfmann/nodejs2023q2-service-app and kopfmann/nodejs2023q2-service-postgres. To test the app using Docker Hub images, pull the images and start the containers:
+the images are available on Docker Hub. Please search for kopfmann/homelibservice-slim-experimental3 and kopfmann/nodejs2023q2-service-postgres. To test the app using Docker Hub images, pull the images and start the containers:
 
 ```
 docker compose up -d
@@ -60,7 +60,7 @@ npm run docker:scan
 
 ### Building images
 
-To build images yourself, delete the docker-compose.yml and rename the docker-compose.example to docker-compose.yml. Then build images and start containers. Run
+To build images yourself, delete or rename the docker-compose.yml and rename the docker-compose.build  to docker-compose.yml. Then build images and start containers. Run
 
 ```
 npm run docker:build
