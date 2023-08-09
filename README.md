@@ -61,7 +61,7 @@ npm run docker:scan
 
 ### Building images
 
-To build images yourself, delete or rename the docker-compose.yml and rename the docker-compose.build to docker-compose.yml. Then build images and start containers. Run
+To build images yourself,first stop the containers you have pulled and started (so that port 5000 is free). Then run:
 
 ```
 npm run docker:build
