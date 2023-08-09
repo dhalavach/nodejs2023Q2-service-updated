@@ -10,8 +10,7 @@ services:
     depends_on:
       - postgres
     volumes:
-      - ./:/app
-      - ignore:/app/node_modules/
+      - ./src:/app/src
     environment:
       DATABASE_URL: ${DATABASE_URL}
       POSTGRES_USER: ${POSTGRES_USER}
@@ -45,5 +44,4 @@ networks:
 
 volumes:
   app:
-  ignore:
   postgres:
