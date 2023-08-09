@@ -25,6 +25,7 @@ Node modules are necessary for running tests. To install, run:
 ```
 npm install
 ```
+
 in the unlikely event of error during the installation process, run:
 
 ```
@@ -40,7 +41,7 @@ download, install, and launch Docker
 the images are available on Docker Hub. Please search for kopfmann/homelibservice-slim-experimental3 and kopfmann/nodejs2023q2-service-postgres. To test the app using Docker Hub images, pull the images and start the containers:
 
 ```
-docker compose up -d
+npm run docker:pull
 ```
 
 then, open repo folder in terminal, install dependencies if you have not already and run
@@ -60,7 +61,7 @@ npm run docker:scan
 
 ### Building images
 
-To build images yourself, delete or rename the docker-compose.yml and rename the docker-compose.build  to docker-compose.yml. Then build images and start containers. Run
+To build images yourself, delete or rename the docker-compose.yml and rename the docker-compose.build to docker-compose.yml. Then build images and start containers. Run
 
 ```
 npm run docker:build
@@ -78,6 +79,10 @@ npm run test
 ```
 
 Occasionally, the app takes some time to start inside the docker container, please wait a little if you encounter "socket hang up" error during tests (you can check the container's log in docker desktop to make sure that the app has started)
+
+### Live reload
+
+The app inside the docker container reloads automatically after changes in your local src folder (try changing console.log statement inside track.service.ts)
 
 ### Linter
 

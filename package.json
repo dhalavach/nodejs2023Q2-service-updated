@@ -6,8 +6,9 @@
   "private": true,
   "license": "UNLICENSED",
   "scripts": {
-    "docker:build": "docker compose up -d --build",
-    "docker:scan": "docker scout recommendations kopfmann/nodejs2023q2-service-app && docker scout recommendations kopfmann/nodejs2023q2-service-postgres",
+    "docker:build": "docker-compose -f docker-build.yml up -d --build",
+    "docker:pull": "docker-compose -f docker-pull.yml up -d",
+    "docker:scan": "docker scout recommendations kopfmann/homelibservice-slim-experimental3 && docker scout recommendations kopfmann/nodejs2023q2-service-postgres",
     "prebuild": "rimraf dist",
     "build": "nest build",
     "format": "prettier --write \"src/**/*.ts\" \"test/**/*.ts\"",
