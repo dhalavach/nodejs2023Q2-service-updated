@@ -8,7 +8,7 @@
   "scripts": {
     "docker:build": "docker-compose -f docker-build.yml up -d --build",
     "docker:pull": "docker-compose -f docker-pull.yml up -d",
-    "docker:scan": "docker scout recommendations kopfmann/homelibservice-slim-experimental3 && docker scout recommendations kopfmann/nodejs2023q2-service-postgres",
+    "docker:scan": "docker scout recommendations kopfmann/homelibservice-app && docker scout recommendations kopfmann/homelibservice-db",
     "prebuild": "rimraf dist",
     "build": "nest build",
     "format": "prettier --write \"src/**/*.ts\" \"test/**/*.ts\"",
