@@ -32,13 +32,17 @@ in the unlikely event of error during the installation process, run:
 npm install --force
 ```
 
+### Environment variable
+Please have .env file in the app folder with the environment variables as specified in the .env.example (or simply use the included .env file)
+
+
 ### Docker
 
 download, install, and launch Docker
 
 ### Docker Hub
 
-the images are available on Docker Hub. Please search for kopfmann/homelibservice-slim-experimental3 and kopfmann/nodejs2023q2-service-postgres. To test the app using Docker Hub images, pull the images and start the containers:
+the images are available on Docker Hub. Please search for kopfmann/homelibservice-slim and kopfmann/nodejs2023q2-service-postgres. To test the app using Docker Hub images, pull the images and start the containers:
 
 ```
 npm run docker:pull

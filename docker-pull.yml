@@ -1,8 +1,8 @@
 version: '3.9'
 services:
   app:
-    container_name: nodejs
-    image: kopfmann/homelibservice-slim-experimental3
+    container_name: nodejs-app
+    image: kopfmann/homelibservice-app
     restart: always
     ports:
       - ${PORT}:${PORT}
@@ -18,11 +18,11 @@ services:
       POSTGRES_PORT: ${POSTGRES_PORT}
       POSTGRES_HOST: ${POSTGRES_DB}
     networks:
-      - postgres
+      - ${NETWORK}
 
   postgres:
     container_name: postgres-db
-    build: ./src/database
+    image: kopfmann/homelibservice-db 
     restart: always
     ports:
       - ${POSTGRES_PORT}:${POSTGRES_PORT}
@@ -35,11 +35,17 @@ services:
     volumes:
       - /var/lib/postgresql/data
     networks:
-      - postgres
+      - ${NETWORK}
 
 networks:
-  postgres:
+  library-service:
     driver: bridge
+    ipam:
+      driver: default
+      config:
+        - subnet: '192.168.0.0/24'
+          gateway: '192.168.0.1'
+    name: ${NETWORK}
 
 volumes:
   app:
