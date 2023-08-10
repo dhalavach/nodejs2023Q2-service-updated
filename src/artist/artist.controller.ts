@@ -7,32 +7,43 @@ import {
   Param,
   Delete,
   HttpCode,
+  UseGuards,
 } from '@nestjs/common';
 import { ArtistService } from './artist.service';
 import { CreateArtistDto } from './create-artist.dto';
 import { UpdateArtistDto } from './update-artist.dto';
+import { JwtAuthGuard } from 'src/auth/jwt-auth.guard';
+import { ApiBearerAuth } from '@nestjs/swagger';
 
 @Controller('artist')
 export class ArtistController {
   constructor(private readonly ArtistService: ArtistService) {}
 
   @Get()
+  @UseGuards(JwtAuthGuard)
+  @ApiBearerAuth()
   getAll() {
     return this.ArtistService.getAll();
   }
 
   @Get(':id')
+  @UseGuards(JwtAuthGuard)
+  @ApiBearerAuth()
   getArtistById(@Param('id') id: string) {
     return this.ArtistService.getArtistById(id);
   }
 
   @Post()
+  @UseGuards(JwtAuthGuard)
+  @ApiBearerAuth()
   @HttpCode(201)
   createArtist(@Body() dto: CreateArtistDto) {
     return this.ArtistService.createArtist(dto);
   }
 
   @Put(':id')
+  @UseGuards(JwtAuthGuard)
+  @ApiBearerAuth()
   updateArtistById(
     @Param('id') id: string,
     @Body() updateArtistDto: UpdateArtistDto,
@@ -41,6 +52,8 @@ export class ArtistController {
   }
 
   @Delete(':id')
+  @UseGuards(JwtAuthGuard)
+  @ApiBearerAuth()
   @HttpCode(204)
   deleteArtistById(@Param('id') id: string) {
     return this.ArtistService.deleteArtistById(id);

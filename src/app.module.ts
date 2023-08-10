@@ -15,6 +15,13 @@ import { Logger } from './log/logging-service';
 import { LoggerMiddleware } from './middleware/logger.middleware';
 import { PrismaModule } from './prisma/prisma.module';
 import { AuthModule } from './auth/auth.module';
+import { AuthService } from './auth/auth.service';
+import { UserService } from './user/user.service';
+import { ArtistService } from './artist/artist.service';
+import { AlbumService } from './album/album.service';
+import { TrackService } from './track/track.service';
+import { FavoritesService } from './favorites/favorites.service';
+import { JwtModule, JwtService } from '@nestjs/jwt';
 
 @Module({
   imports: [
@@ -25,9 +32,20 @@ import { AuthModule } from './auth/auth.module';
     FavoritesModule,
     AuthModule,
     PrismaModule,
+    JwtModule,
   ],
   controllers: [AppController],
-  providers: [AppService, User, Artist, Album, Track, Favorites, Logger],
+  providers: [
+    AppService,
+    UserService,
+    ArtistService,
+    AlbumService,
+    TrackService,
+    FavoritesService,
+    Logger,
+    AuthService,
+    JwtService,
+  ],
 })
 export class AppModule implements NestModule {
   configure(consumer: MiddlewareConsumer) {

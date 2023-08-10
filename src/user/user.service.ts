@@ -9,6 +9,9 @@ import { v4 as uuidv4 } from 'uuid';
 import { validate } from 'uuid';
 import { UpdateUserDto } from './update-user.dto';
 import { PrismaService } from 'src/prisma/prisma.service';
+import * as bcrypt from 'bcrypt';
+
+export const roundsOfHashing = 10;
 
 @Injectable()
 export class UserService {
@@ -48,10 +51,12 @@ export class UserService {
     if (!(dto.login && dto.password))
       throw new BadRequestException('invalid id');
 
+    const hashedPassword = await bcrypt.hash(dto.password, roundsOfHashing);
+
     const userData = {
       id: uuidv4(),
       login: dto.login,
-      password: dto.password,
+      password: hashedPassword,
       version: 1,
       createdAt: Number(Date.now()),
       updatedAt: Number(Date.now()),
@@ -74,10 +79,10 @@ export class UserService {
 
     if (dto.oldPassword !== user.password)
       throw new ForbiddenException('wrong password');
-
+    const updatedPassword = await bcrypt.hash(dto.newPassword, roundsOfHashing);
     const newUserData = {
       ...user,
-      password: dto.newPassword,
+      password: updatedPassword,
       updatedAt: Date.now(),
       version: (user.version += 1),
     };
