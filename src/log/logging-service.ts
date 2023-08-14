@@ -1,7 +1,8 @@
 import { Injectable, LoggerService } from '@nestjs/common';
 import { appendFile, readdir, stat } from 'fs/promises';
 import { resolve } from 'path';
-import {} from 'dotenv/config';
+import { config } from 'dotenv';
+config();
 
 @Injectable()
 export class Logger implements LoggerService {
@@ -9,26 +10,30 @@ export class Logger implements LoggerService {
     this.logFileIndex = 1;
     this.errorLogFileIndex = 1;
     this.warningLogFileIndex = 1;
-    this.maxLogFileSize = 1024 * 1024;
+    this.logFile = process.env.LOG_FILE;
+    this.errorLogFile = process.env.ERROR_LOG_FILE;
+    this.warningLogFile = process.env.WARNING_LOG_FILE;
   }
   logFileIndex: number;
   errorLogFileIndex: number;
   warningLogFileIndex: number;
-  maxLogFileSize: number;
+  logFile: string;
+  errorLogFile: string;
+  warningLogFile: string;
 
   async log(message: any, ...optionalParams: any[]) {
     let pathToLog = resolve(
       process.cwd(),
-      `homelib-log_${this.logFileIndex}.txt`,
+      `${this.logFile}_${this.logFileIndex}.txt`,
     );
     try {
       const stats = await stat(pathToLog);
       const size = stats.size;
-      if (size > this.maxLogFileSize) {
+      if (size > Number(process.env.LOG_MAX_SIZE) * 1024) {
         this.logFileIndex++;
         pathToLog = resolve(
           process.cwd(),
-          `homelib-log_${this.logFileIndex}.txt`,
+          `${this.logFile}_${this.logFileIndex}.txt`,
         );
       }
     } catch (err) {
@@ -46,16 +51,16 @@ export class Logger implements LoggerService {
   async error(message: any, ...optionalParams: any[]) {
     let pathToErrorLog = resolve(
       process.cwd(),
-      `homelib-log-error_${this.errorLogFileIndex}.txt`,
+      `${this.errorLogFile}_${this.errorLogFileIndex}.txt`,
     );
     try {
       const stats = await stat(pathToErrorLog);
       const size = stats.size;
-      if (size > this.maxLogFileSize) {
+      if (size > Number(process.env.LOG_MAX_SIZE) * 1024) {
         this.errorLogFileIndex++;
         pathToErrorLog = resolve(
           process.cwd(),
-          `homelib-log-error_${this.errorLogFileIndex}.txt`,
+          `${this.errorLogFile}_${this.errorLogFileIndex}.txt`,
         );
       }
     } catch (err) {
@@ -73,16 +78,16 @@ export class Logger implements LoggerService {
   async warn(message: any, ...optionalParams: any[]) {
     let pathToWarningLog = resolve(
       process.cwd(),
-      `homelib-log-warning_${this.warningLogFileIndex}.txt`,
+      `${this.warningLogFile}_${this.warningLogFileIndex}.txt`,
     );
     try {
       const stats = await stat(pathToWarningLog);
       const size = stats.size;
-      if (size > this.maxLogFileSize) {
+      if (size > Number(process.env.LOG_MAX_SIZE) * 1024) {
         this.warningLogFileIndex++;
         pathToWarningLog = resolve(
           process.cwd(),
-          `homelib-log-warning_${this.warningLogFileIndex}.txt`,
+          `${this.warningLogFile}_${this.warningLogFileIndex}.txt`,
         );
       }
     } catch (err) {
