@@ -22,6 +22,7 @@ import { AlbumService } from './album/album.service';
 import { TrackService } from './track/track.service';
 import { FavoritesService } from './favorites/favorites.service';
 import { JwtModule, JwtService } from '@nestjs/jwt';
+import { LogModule } from './log/log.module';
 
 @Module({
   imports: [
@@ -33,6 +34,7 @@ import { JwtModule, JwtService } from '@nestjs/jwt';
     AuthModule,
     PrismaModule,
     JwtModule,
+    LogModule,
   ],
   controllers: [AppController],
   providers: [
