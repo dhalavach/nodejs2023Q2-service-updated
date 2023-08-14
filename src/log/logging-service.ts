@@ -10,9 +10,10 @@ export class Logger implements LoggerService {
     this.logFileIndex = 1;
     this.errorLogFileIndex = 1;
     this.warningLogFileIndex = 1;
-    this.logFile = process.env.LOG_FILE;
-    this.errorLogFile = process.env.ERROR_LOG_FILE;
-    this.warningLogFile = process.env.WARNING_LOG_FILE;
+    this.logFile = process.env.LOG_FILE || 'log';
+    this.errorLogFile = process.env.ERROR_LOG_FILE || 'errors';
+    this.warningLogFile = process.env.WARNING_LOG_FILE || 'warnings';
+    this.logMaxSize = Number(process.env.LOG_MAX_SIZE) || 1024;
   }
   logFileIndex: number;
   errorLogFileIndex: number;
@@ -20,6 +21,7 @@ export class Logger implements LoggerService {
   logFile: string;
   errorLogFile: string;
   warningLogFile: string;
+  logMaxSize: number;
 
   async log(message: any, ...optionalParams: any[]) {
     let pathToLog = resolve(
@@ -29,7 +31,7 @@ export class Logger implements LoggerService {
     try {
       const stats = await stat(pathToLog);
       const size = stats.size;
-      if (size > Number(process.env.LOG_MAX_SIZE) * 1024) {
+      if (size > this.logMaxSize * 1024) {
         this.logFileIndex++;
         pathToLog = resolve(
           process.cwd(),
@@ -56,7 +58,7 @@ export class Logger implements LoggerService {
     try {
       const stats = await stat(pathToErrorLog);
       const size = stats.size;
-      if (size > Number(process.env.LOG_MAX_SIZE) * 1024) {
+      if (size > this.logMaxSize * 1024) {
         this.errorLogFileIndex++;
         pathToErrorLog = resolve(
           process.cwd(),
@@ -83,7 +85,7 @@ export class Logger implements LoggerService {
     try {
       const stats = await stat(pathToWarningLog);
       const size = stats.size;
-      if (size > Number(process.env.LOG_MAX_SIZE) * 1024) {
+      if (size > this.logMaxSize * 1024) {
         this.warningLogFileIndex++;
         pathToWarningLog = resolve(
           process.cwd(),
