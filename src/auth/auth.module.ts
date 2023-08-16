@@ -8,6 +8,8 @@ import { PrismaModule } from 'src/prisma/prisma.module';
 import { UserModule } from 'src/user/user.module';
 import { JwtStrategy } from './jwt.strategy';
 import { UserService } from 'src/user/user.service';
+import { APP_GUARD } from '@nestjs/core';
+import { AuthGuard } from './auth.guard';
 
 export const jwtSecret = 'zjP9h6ZI5LoSKCRj';
 
@@ -17,11 +19,22 @@ export const jwtSecret = 'zjP9h6ZI5LoSKCRj';
     PrismaModule,
     PassportModule,
     JwtModule.register({
+      global: true,
       secret: jwtSecret,
       signOptions: { expiresIn: '5m' },
     }),
   ],
   controllers: [AuthController],
-  providers: [AuthService, JwtStrategy, UserService, JwtService],
+  providers: [
+    AuthService,
+    JwtStrategy,
+    UserService,
+    JwtService,
+    {
+      provide: APP_GUARD,
+      useClass: AuthGuard,
+    },
+  ],
+  exports: [AuthService],
 })
 export class AuthModule {}
