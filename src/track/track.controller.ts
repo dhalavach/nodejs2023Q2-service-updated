@@ -7,7 +7,6 @@ import {
   Param,
   Delete,
   HttpCode,
-  UseGuards,
 } from '@nestjs/common';
 import { TrackService } from './track.service';
 import { CreateTrackDto } from './create-track.dto';

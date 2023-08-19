@@ -5,7 +5,7 @@ import {
   UnauthorizedException,
 } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
-import { jwtSecret } from './auth.module';
+// import { jwtSecret } from './auth.module';
 import { Request } from 'express';
 import { Reflector } from '@nestjs/core';
 import { IS_PUBLIC_KEY } from './decorator';
@@ -32,14 +32,14 @@ export class AuthGuard implements CanActivate {
     }
     try {
       await this.jwtService.verifyAsync(token, {
-        secret: '12345',
+        secret: process.env.JWT_KEY,
       });
       //request['user'] = payload;
     } catch {
       if (request.url === '/auth/refresh') {
         try {
           await this.jwtService.verifyAsync(token, {
-            secret: '12345',
+            secret: process.env.JWT_KEY,
             ignoreExpiration: true,
           });
         } catch {

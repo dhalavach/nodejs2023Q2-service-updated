@@ -1,5 +1,5 @@
 import { Injectable, LoggerService } from '@nestjs/common';
-import { appendFile, readdir, stat } from 'fs/promises';
+import { appendFile, stat } from 'fs/promises';
 import { resolve } from 'path';
 import { config } from 'dotenv';
 config();
@@ -23,7 +23,7 @@ export class Logger implements LoggerService {
   warningLogFile: string;
   logMaxSize: number;
 
-  async log(message: any, ...optionalParams: any[]) {
+  async log(message: any) {
     let pathToLog = resolve(
       process.cwd(),
       `${this.logFile}_${this.logFileIndex}.txt`,
@@ -50,7 +50,7 @@ export class Logger implements LoggerService {
     }
   }
 
-  async error(message: any, ...optionalParams: any[]) {
+  async error(message: any) {
     let pathToErrorLog = resolve(
       process.cwd(),
       `${this.errorLogFile}_${this.errorLogFileIndex}.txt`,
@@ -77,7 +77,7 @@ export class Logger implements LoggerService {
     }
   }
 
-  async warn(message: any, ...optionalParams: any[]) {
+  async warn(message: any) {
     let pathToWarningLog = resolve(
       process.cwd(),
       `${this.warningLogFile}_${this.warningLogFileIndex}.txt`,

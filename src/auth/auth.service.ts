@@ -5,7 +5,6 @@ import {
   NotFoundException,
   UnauthorizedException,
 } from '@nestjs/common';
-import { PrismaService } from './../prisma/prisma.service';
 import { JwtService } from '@nestjs/jwt';
 import { AuthEntity } from './entity/auth.entity';
 import { UserService } from 'src/user/user.service';
@@ -16,22 +15,21 @@ import { User, tokensObject } from 'src/types/types';
 export class AuthService {
   constructor(
     private readonly userService: UserService,
-    private readonly prisma: PrismaService,
     private readonly jwtService: JwtService,
   ) {}
 
   public async setAndReturnTokens(user: User): Promise<tokensObject> {
     const payload = { sub: user.id, username: user.login };
     const accessToken = await this.jwtService.signAsync(payload, {
-      secret: '12345',
-      expiresIn: 600,
+      secret: process.env.JWT_KEY,
+      expiresIn: process.env.TOKEN_EXPIRATION_TIME,
     });
     const refreshToken = await this.jwtService.signAsync(payload, {
-      secret: '12345',
-      expiresIn: 6000,
+      secret: process.env.JWT_REFRESH_KEY,
+      expiresIn: process.env.REFRESH_TOKEN_EXPIRATION_TIME,
     });
-
-    const hashedRefreshToken = await bcrypt.hash(refreshToken, 10);
+    const salt = Number(process.env.SALT);
+    const hashedRefreshToken = await bcrypt.hash(refreshToken, salt);
 
     await this.userService.updateRefreshTokenById(user.id, hashedRefreshToken);
 
@@ -44,18 +42,16 @@ export class AuthService {
   public async refreshToken(refreshToken: string) {
     const payload = this.jwtService.decode(refreshToken);
     if (!payload) {
-      throw new ForbiddenException('forbidden - no payload');
+      throw new ForbiddenException('forbidden: empty payload');
     }
     const user = await this.userService.getUserById(payload.sub);
     if (!user) {
       throw new NotFoundException('user not found');
     }
-    // if (!(await bcrypt.compare(refreshToken, user.refreshToken))) {
-    //   throw new Error('invalid token');
-    // }
 
     try {
-      await this.jwtService.verifyAsync(refreshToken, { secret: '12345' });
+      const secret = process.env.JWT_REFRESH_KEY;
+      await this.jwtService.verifyAsync(refreshToken, { secret: secret });
     } catch (err) {
       console.log(err);
       throw new ForbiddenException('forbidden');
@@ -70,7 +66,6 @@ export class AuthService {
   public async login(dto): Promise<AuthEntity> {
     const { login, password } = dto;
     const user = await this.userService.getUserByLogin(login);
-    // const user = await this.prisma.user.findFirst({ where: { login: login } });
 
     if (!user) {
       throw new NotFoundException(`No user found`);

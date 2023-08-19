@@ -7,18 +7,11 @@ import {
   Param,
   Delete,
   HttpCode,
-  UseGuards,
 } from '@nestjs/common';
 import { UserService } from './user.service';
 import { CreateUserDto } from './create-user.dto';
 import { UpdateUserDto } from './update-user.dto';
-// import { JwtAuthGuard } from 'src/auth/jwt-auth.guard';
-import {
-  ApiBearerAuth,
-  ApiCreatedResponse,
-  ApiOkResponse,
-  ApiTags,
-} from '@nestjs/swagger';
+import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 
 @Controller('user')
 @ApiTags('user')

@@ -7,7 +7,6 @@ import {
   Param,
   Delete,
   HttpCode,
-  UseGuards,
 } from '@nestjs/common';
 import { AlbumService } from './album.service';
 import { CreateAlbumDto } from './create-album.dto';

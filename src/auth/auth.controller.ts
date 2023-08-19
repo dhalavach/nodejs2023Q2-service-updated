@@ -5,20 +5,11 @@ import {
   ClassSerializerInterceptor,
   Controller,
   ForbiddenException,
-  Get,
   HttpCode,
-  HttpException,
-  HttpStatus,
   Post,
-  Request,
-  UseGuards,
   UseInterceptors,
 } from '@nestjs/common';
 import { AuthService } from './auth.service';
-import { ApiOkResponse, ApiTags } from '@nestjs/swagger';
-import { AuthEntity } from './entity/auth.entity';
-import { LoginDto } from './dto/login.dto';
-import { AuthGuard } from './auth.guard';
 import { Public } from './decorator';
 import { loginDto, refreshDto, signupDto } from 'src/types/types';
 
