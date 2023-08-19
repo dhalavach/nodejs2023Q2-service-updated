@@ -11,7 +11,6 @@ import {
 import { ArtistService } from './artist.service';
 import { CreateArtistDto } from './create-artist.dto';
 import { UpdateArtistDto } from './update-artist.dto';
-// import { JwtAuthGuard } from 'src/auth/jwt-auth.guard';
 import { ApiBearerAuth } from '@nestjs/swagger';
 
 @Controller('artist')
