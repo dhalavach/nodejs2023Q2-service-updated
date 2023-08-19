@@ -65,6 +65,7 @@ export class UserService {
     await this.prisma.user.create({
       data: userData,
     });
+    delete userData.password;
     return userData;
   }
 
