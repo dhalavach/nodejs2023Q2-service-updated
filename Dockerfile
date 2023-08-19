@@ -14,4 +14,4 @@ COPY doc doc
 COPY prisma prisma
 COPY --from=builder /app/node_modules/ node_modules
 EXPOSE 5000
-CMD npx prisma migrate dev && npm run start:dev
+CMD npx prisma generate && npx prisma migrate deploy && npm run start:dev

@@ -52,19 +52,19 @@ export class UserService {
       throw new BadRequestException('invalid id');
 
     const hashedPassword = await bcrypt.hash(dto.password, roundsOfHashing);
+    const now = Number(Date.now());
 
     const userData = {
       id: uuidv4(),
       login: dto.login,
       password: hashedPassword,
       version: 1,
-      createdAt: Number(Date.now()),
-      updatedAt: Number(Date.now()),
+      createdAt: now,
+      updatedAt: now,
     };
     await this.prisma.user.create({
       data: userData,
     });
-    delete userData.password;
     return userData;
   }
 

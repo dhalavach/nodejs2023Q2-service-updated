@@ -8,7 +8,7 @@ import { Request, Response, NextFunction } from 'express';
 
 @Injectable()
 export class LoggerMiddleware implements NestMiddleware {
-  private logger = new Logger(`HTTP`);
+  public logger = new Logger(`HTTP`);
   use(req: RawBodyRequest<Request>, res: Response, next: NextFunction) {
     const body = req.rawBody ? req.rawBody.toString() : '';
     this.logger.log(

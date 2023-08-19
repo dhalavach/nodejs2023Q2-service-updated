@@ -1,5 +1,6 @@
 //src/auth/auth.service.ts
 import {
+  ForbiddenException,
   Injectable,
   NotFoundException,
   UnauthorizedException,
@@ -7,33 +8,85 @@ import {
 import { PrismaService } from './../prisma/prisma.service';
 import { JwtService } from '@nestjs/jwt';
 import { AuthEntity } from './entity/auth.entity';
+import { UserService } from 'src/user/user.service';
+import * as bcrypt from 'bcrypt';
 
 @Injectable()
 export class AuthService {
-  constructor(private prisma: PrismaService, private jwtService: JwtService) {}
+  constructor(
+    private readonly userService: UserService,
+    private readonly prisma: PrismaService,
+    private readonly jwtService: JwtService,
+  ) {}
 
-  async login(login: string, password: string): Promise<AuthEntity> {
-    // Step 1: Fetch a user with the given email
-    const user = await this.prisma.user.findFirst({ where: { login: login } });
+  public async setAndReturnTokens(user) {
+    const payload = { sub: user.id, username: user.login };
+    const accessToken = await this.jwtService.signAsync(payload, {
+      secret: '12345',
+      expiresIn: 600,
+    });
+    const refreshToken = await this.jwtService.signAsync(payload, {
+      secret: '12345',
+      expiresIn: 6000,
+    });
 
-    // If no user is found, throw an error
+    const hashedRefreshToken = await bcrypt.hash(refreshToken, 10);
+
+    await this.prisma.user.update({
+      where: { id: user.id },
+      data: {
+        refreshToken: hashedRefreshToken,
+        //accessToken: accessToken,
+      },
+    });
+    return {
+      accessToken: accessToken,
+      refreshToken: refreshToken,
+    };
+  }
+
+  public async refreshToken(refreshToken: string) {
+    const payload = this.jwtService.decode(refreshToken);
+    if (!payload) {
+      throw new ForbiddenException('forbidden - no payload');
+    }
+    const user = await this.userService.getUserById(payload.sub);
     if (!user) {
-      throw new NotFoundException(`No user found for login: ${login}`);
+      throw new NotFoundException('user not found');
+    }
+    // if (!(await bcrypt.compare(refreshToken, user.refreshToken))) {
+    //   throw new Error('invalid token');
+    // }
+
+    try {
+      await this.jwtService.verifyAsync(refreshToken, { secret: '12345' });
+    } catch (err) {
+      console.log(err);
+      throw new ForbiddenException('forbidden');
+    }
+    return user;
+  }
+
+  public async signup(dto) {
+    return await this.userService.createUser(dto);
+  }
+
+  public async login(dto): Promise<AuthEntity> {
+    const { login, password } = dto;
+    const user = await this.userService.getUserByLogin(login);
+    // const user = await this.prisma.user.findFirst({ where: { login: login } });
+
+    if (!user) {
+      throw new NotFoundException(`No user found`);
     }
 
-    // Step 2: Check if the password is correct
-    const isPasswordValid = user.password === password;
+    const isPasswordValid = await bcrypt.compare(password, user.password);
 
-    // If password does not match, throw an error
     if (!isPasswordValid) {
       throw new UnauthorizedException('Invalid password');
     }
 
-    // Step 3: Generate a JWT containing the user's ID and return it
-    const payload = { sub: user.id, username: user.login };
-
-    return {
-      accessToken: await this.jwtService.signAsync(payload),
-    };
+    const tokens = await this.setAndReturnTokens(user);
+    return tokens;
   }
 }

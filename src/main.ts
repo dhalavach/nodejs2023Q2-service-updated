@@ -3,12 +3,15 @@ import { AppModule } from './app.module';
 import { join } from 'path';
 import { readFile } from 'fs/promises';
 import { dirname } from 'path';
-import { parse } from 'yaml';
+// import { parse } from 'yaml';
+import { load } from 'js-yaml';
+
 import { OpenAPIObject, SwaggerModule } from '@nestjs/swagger';
 import { Logger } from './log/logging-service';
 import { HttpException, ValidationPipe } from '@nestjs/common';
 import { config } from 'dotenv';
 import { HttpExceptionFilter } from './exceptions/http-exception-filter';
+import { serve, setup } from 'swagger-ui-express';
 
 config();
 const port = Number(process.env.PORT) || 5000;
@@ -19,15 +22,14 @@ async function bootstrap() {
     bodyParser: true,
     rawBody: true,
   });
-  app.useGlobalPipes(new ValidationPipe());
   app.useGlobalFilters(new HttpExceptionFilter());
 
-  const api = await readFile(
-    join(dirname(__dirname), 'doc', 'api.yaml'),
-    'utf-8',
+  const doc = load(
+    (
+      await readFile(join(dirname(__dirname), 'doc', 'api.yaml'), 'utf-8')
+    ).toString(),
   );
-  const doc: OpenAPIObject = parse(api);
-  SwaggerModule.setup('doc', app, doc);
+  app.use('/doc', serve, setup(doc));
   await app.listen(port);
 }
 bootstrap();

@@ -33,7 +33,6 @@ import { LogModule } from './log/log.module';
     FavoritesModule,
     AuthModule,
     PrismaModule,
-    JwtModule,
     LogModule,
   ],
   controllers: [AppController],

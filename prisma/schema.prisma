@@ -18,6 +18,7 @@ model User {
   version   Int    @default(autoincrement())
   createdAt Float
   updatedAt Float
+  refreshToken String?
 }
 
 model Artist {

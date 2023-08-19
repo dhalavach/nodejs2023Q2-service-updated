@@ -1,0 +1,13 @@
+Starting Nest application...
+PrismaModule dependencies initialized
+JwtModule dependencies initialized
+AuthModule dependencies initialized
+LogModule dependencies initialized
+ConfigHostModule dependencies initialized
+AppModule dependencies initialized
+ConfigModule dependencies initialized
+ArtistModule dependencies initialized
+AlbumModule dependencies initialized
+UserModule dependencies initialized
+TrackModule dependencies initialized
+FavoritesModule dependencies initialized
