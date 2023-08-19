@@ -17,11 +17,11 @@ export const roundsOfHashing = 10;
 export class UserService {
   constructor(private prisma: PrismaService) {}
 
-  async getAll() {
+  public async getAll() {
     return await this.prisma.user.findMany();
   }
 
-  async getUserById(id: string) {
+  public async getUserById(id: string) {
     if (!validate(id)) throw new BadRequestException('invalid id');
 
     if (!(await this.prisma.user.findFirst({ where: { id: id } })))
@@ -35,7 +35,7 @@ export class UserService {
     });
   }
 
-  async getUserByLogin(login: string) {
+  public async getUserByLogin(login: string) {
     if (!login) throw new BadRequestException('invalid login!');
     if (!(await this.prisma.user.findFirst({ where: { login: login } })))
       throw new NotFoundException('user not found');
@@ -112,5 +112,20 @@ export class UserService {
         id: id,
       },
     });
+  }
+
+  async updateRefreshTokenById(id: string, refreshToken: string) {
+    try {
+      await this.prisma.user.update({
+        where: { id: id },
+        data: {
+          refreshToken: refreshToken,
+        },
+      });
+      return true;
+    } catch (err) {
+      console.log(err);
+      return false;
+    }
   }
 }

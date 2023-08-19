@@ -10,6 +10,7 @@ import { JwtService } from '@nestjs/jwt';
 import { AuthEntity } from './entity/auth.entity';
 import { UserService } from 'src/user/user.service';
 import * as bcrypt from 'bcrypt';
+import { User, tokensObject } from 'src/types/types';
 
 @Injectable()
 export class AuthService {
@@ -19,7 +20,7 @@ export class AuthService {
     private readonly jwtService: JwtService,
   ) {}
 
-  public async setAndReturnTokens(user) {
+  public async setAndReturnTokens(user: User): Promise<tokensObject> {
     const payload = { sub: user.id, username: user.login };
     const accessToken = await this.jwtService.signAsync(payload, {
       secret: '12345',
@@ -32,13 +33,8 @@ export class AuthService {
 
     const hashedRefreshToken = await bcrypt.hash(refreshToken, 10);
 
-    await this.prisma.user.update({
-      where: { id: user.id },
-      data: {
-        refreshToken: hashedRefreshToken,
-        //accessToken: accessToken,
-      },
-    });
+    await this.userService.updateRefreshTokenById(user.id, hashedRefreshToken);
+
     return {
       accessToken: accessToken,
       refreshToken: refreshToken,
