@@ -5,9 +5,15 @@ import { ConfigService } from '@nestjs/config';
 
 @Injectable()
 export class Logger implements LoggerService {
-  constructor(
-    private readonly configService: ConfigService, // private logFileIndex = 1,
-  ) {}
+  constructor(private readonly configService: ConfigService) {
+    this.logFileIndex = 1;
+    this.errorLogFileIndex = 1;
+    this.warningLogFileIndex = 1;
+    this.logFile = process.env.LOG_FILE || 'log';
+    this.errorLogFile = process.env.ERROR_LOG_FILE || 'errors';
+    this.warningLogFile = process.env.WARNING_LOG_FILE || 'warnings';
+    this.logMaxSize = Number(process.env.LOG_MAX_SIZE) || 1024;
+  }
   // private errorLogFileIndex = 1,
   // private warningLogFileIndex = 1,
   // private logFile = process.env.LOG_FILE || 'log',
@@ -23,14 +29,14 @@ export class Logger implements LoggerService {
   // this.warningLogFile = process.env.WARNING_LOG_FILE || 'warnings';
   // this.logMaxSize = Number(process.env.LOG_MAX_SIZE) || 1024;
 
-  logFileIndex: 1;
-  errorLogFileIndex: 1;
-  warningLogFileIndex: 1;
-  logFile: 'log';
-  errorLogFile: 'errors';
-  warningLogFile: 'warnings';
-  logMaxSize: 1024;
-  logLevel: 3;
+  logFileIndex: number;
+  errorLogFileIndex: number;
+  warningLogFileIndex: number;
+  logFile: string;
+  errorLogFile: string;
+  warningLogFile: string;
+  logMaxSize: number;
+  logLevel: number;
 
   //log levels: 3 - everything, 2 - logs excluded, 1 - warnings excluded, 0 - nothing (errors excluded)
   async log(message: any) {
