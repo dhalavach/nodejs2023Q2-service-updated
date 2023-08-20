@@ -42,33 +42,19 @@ To build images and start containers, run:
 npm run docker:build
 ```
 
-then, open repo folder in terminal, install dependencies if you have not already and run
 
-```
-npm run test
-```
-
-### Vulnerabilities scan
-
-After you have built the images with docker compose up app -d --build
-you can scan them for vulnerabiities and recommendations using Docker Scout. Run
-
-```
-npm run docker:scan
-```
-
-
-After starting the app on port (5000 by default) you can open a separate terminal window and run the tests
+After starting the app on port (5000 by default) you can open a separate terminal window and run the tests (please make sure that nothing else is running on port 5000 - other container or some app, such as Mac Os Control Center which often uses this port)
 
 ## Testing
 
 After installing the dependencies, pulling or building the images, and starting the containers, open new terminal and run:
 
 ```
-npm run test
+npm run test:auth
 ```
 
-Occasionally, the app takes some time to start inside the docker container, please wait a little if you encounter "socket hang up" error during tests (you can check the container's log in docker desktop to make sure that the app has started)
+ATTENTION: Occasionally, the app takes some time to start inside the docker container, please wait if you encounter "socket hang up" error during tests (you can check the container's log in docker desktop to make sure that the app has started). However, if you are on M1 Mac, system and Docker restart might be requirered to fix this error. A variation of this error is when "Favorites" tests fail - it also means that the app has not fully started insided the container. Simply wait a little and all tests will pass! 
+
 
 ### Linter
 

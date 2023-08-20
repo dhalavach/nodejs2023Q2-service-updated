@@ -4,7 +4,6 @@ import {
   ArgumentsHost,
   HttpException,
 } from '@nestjs/common';
-import { Request } from 'express';
 import { Logger } from 'src/log/logging-service';
 
 @Catch()
