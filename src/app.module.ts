@@ -1,5 +1,5 @@
 import { MiddlewareConsumer, Module, NestModule } from '@nestjs/common';
-import { AppController } from './app.controller';
+// import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { UserModule } from './user/user.module';
 import { ArtistModule } from './artist/artist.module';
@@ -18,9 +18,13 @@ import { TrackService } from './track/track.service';
 import { FavoritesService } from './favorites/favorites.service';
 import { JwtService } from '@nestjs/jwt';
 import { LogModule } from './log/log.module';
+import { ConfigModule } from '@nestjs/config';
+import { APP_FILTER } from '@nestjs/core';
+import { HttpExceptionFilter } from './exceptions/http-exception-filter';
 
 @Module({
   imports: [
+    ConfigModule.forRoot({ isGlobal: true }),
     UserModule,
     ArtistModule,
     AlbumModule,
@@ -30,17 +34,11 @@ import { LogModule } from './log/log.module';
     PrismaModule,
     LogModule,
   ],
-  controllers: [AppController],
   providers: [
-    AppService,
-    UserService,
-    ArtistService,
-    AlbumService,
-    TrackService,
-    FavoritesService,
-    Logger,
-    AuthService,
-    JwtService,
+    {
+      provide: APP_FILTER,
+      useClass: HttpExceptionFilter,
+    },
   ],
 })
 export class AppModule implements NestModule {

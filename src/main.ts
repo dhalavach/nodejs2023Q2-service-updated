@@ -8,7 +8,6 @@ import { load } from 'js-yaml';
 import { Logger } from './log/logging-service';
 import { ValidationPipe } from '@nestjs/common';
 import { config } from 'dotenv';
-import { HttpExceptionFilter } from './exceptions/http-exception-filter';
 import { serve, setup } from 'swagger-ui-express';
 
 config();
@@ -16,12 +15,12 @@ const port = Number(process.env.PORT) || 5000;
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule, {
-    logger: new Logger(),
     bodyParser: true,
     rawBody: true,
+    bufferLogs: true,
   });
-  app.useGlobalFilters(new HttpExceptionFilter());
   app.useGlobalPipes(new ValidationPipe());
+  app.useLogger(app.get(Logger));
 
   const doc = load(
     (

@@ -4,20 +4,36 @@ import {
   ArgumentsHost,
   HttpException,
 } from '@nestjs/common';
-import { Request, Response } from 'express';
+import { Request } from 'express';
+import { Logger } from 'src/log/logging-service';
 
-@Catch(HttpException)
+@Catch()
 export class HttpExceptionFilter implements ExceptionFilter {
-  catch(exception: HttpException, host: ArgumentsHost) {
+  constructor(private logger: Logger) {}
+  async catch(exception: any, host: ArgumentsHost) {
     const ctx = host.switchToHttp();
-    const response = ctx.getResponse<Response>();
-    const request = ctx.getRequest<Request>();
-    const status = exception.getStatus();
+    const request = ctx.getRequest();
+    const response = ctx.getResponse();
+    const status =
+      exception instanceof HttpException ? exception.getStatus() : 500;
+    const message =
+      exception instanceof HttpException
+        ? exception.message
+        : 'Internal Server Error!';
 
-    response.status(status).json({
-      statusCode: status,
-      timestamp: new Date().toISOString(),
-      path: request.url,
-    });
+    const errorLogData = {
+      request: {
+        method: request.method,
+        url: request.url,
+        query: request.query,
+        body: request.body,
+      },
+      response: {
+        statusCode: status,
+        message: message,
+      },
+    };
+    await this.logger.error(errorLogData);
+    response.status(status).json(errorLogData);
   }
 }

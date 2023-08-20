@@ -2,9 +2,9 @@
   "name": "home-library",
   "version": "0.0.1",
   "description": "",
-  "author": "",
+  "author": "Dmitry Halavach",
   "private": true,
-  "license": "UNLICENSED",
+  "license": "MIT",
   "scripts": {
     "docker:build": "docker compose up -d --build",
     "docker:scan": "docker scout recommendations kopfmann/nodejs2023q2-service-app && docker scout recommendations kopfmann/nodejs2023q2-service-postgres",

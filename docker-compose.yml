@@ -10,23 +10,8 @@ services:
       - postgres
     volumes:
       - ./src:/app/src
-    environment:
-      PORT: ${PORT}
-      LOG_FILE: ${LOG_FILE}
-      ERROR_LOG_FILE: ${ERROR_LOG_FILE}
-      WARNING_LOG_FILE: ${WARNING_LOG_FILE}
-      LOG_MAX_SIZE: ${LOG_MAX_SIZE}
-      DATABASE_URL: ${DATABASE_URL}
-      POSTGRES_USER: ${POSTGRES_USER}
-      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
-      POSTGRES_DB: ${POSTGRES_DB}
-      POSTGRES_PORT: ${POSTGRES_PORT}
-      POSTGRES_HOST: postgres
-      JWT_KEY: ${JWT_KEY}
-      JWT_REFRESH_KEY: ${JWT_REFRESH_KEY}
-      TOKEN_EXPIRATION_TIME: ${TOKEN_EXPIRATION_TIME}
-      REFRESH_TOKEN_EXPIRATION_TIME: ${REFRESH_TOKEN_EXPIRATION_TIME}
-      SALT: ${SALT}
+    env_file:
+      - .env
     networks:
       - ${NETWORK}
 
@@ -36,12 +21,8 @@ services:
     restart: always
     ports:
       - ${POSTGRES_PORT}:${POSTGRES_PORT}
-    environment:
-      POSTGRES_USER: ${POSTGRES_USER}
-      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
-      POSTGRES_DB: ${POSTGRES_DB}
-      POSTGRES_HOST_AUTH_METHOD: trust
-      PGDATA: /var/lib/postgresql/data
+    env_file:
+      - .env
     volumes:
       - /var/lib/postgresql/data
     command:

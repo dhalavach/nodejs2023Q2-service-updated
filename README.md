@@ -12,10 +12,10 @@
 git clone git@github.com:dhalavach/nodejs2023Q2-service.git
 ```
 
-switch to prisma-docker branch:
+switch to auth branch:
 
 ```
-git checkout prisma-docker
+git checkout auth
 ```
 
 ## Installing node modules
@@ -37,10 +37,9 @@ download, install, and launch Docker
 
 ### Docker Hub
 
-the images are available on Docker Hub. Please search for kopfmann/kopfmann/nodejs2023q2-service-app and kopfmann/nodejs2023q2-service-postgres. To test the app using Docker Hub images, pull the images and start the containers:
-
+To build images and start containers, run:
 ```
-docker compose up -d
+npm run docker:build
 ```
 
 then, open repo folder in terminal, install dependencies if you have not already and run
@@ -58,14 +57,6 @@ you can scan them for vulnerabiities and recommendations using Docker Scout. Run
 npm run docker:scan
 ```
 
-### Building images
-
-To build images yourself, delete the docker-compose.yml and rename the docker-compose.example to docker-compose.yml. Then build images and start containers. Run
-
-```
-npm run docker:build
-
-```
 
 After starting the app on port (5000 by default) you can open a separate terminal window and run the tests
 
