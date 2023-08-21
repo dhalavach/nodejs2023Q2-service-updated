@@ -2,7 +2,7 @@ version: '3.9'
 services:
   app:
     container_name: homelibservice-app
-    image: kopfmann/homelibservice-auth-app
+    image: kopfmann/homelib-multiarch
     restart: always
     ports:
       - ${PORT}:${PORT}
@@ -17,7 +17,7 @@ services:
 
   postgres:
     container_name: homelibservice-db
-    image: kopfmann/homelibservice-auth-db
+    image: kopfmann/homelib-db-multiarch
     restart: always
     ports:
       - ${POSTGRES_PORT}:${POSTGRES_PORT}

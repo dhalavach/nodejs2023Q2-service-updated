@@ -8,7 +8,7 @@
   "scripts": {
     "docker:build": "docker-compose -f docker-build.yml up -d --build",
     "docker:pull": "docker-compose -f docker-pull.yml up -d",
-    "docker:scan": "docker scout recommendations kopfmann/homelibservice-auth-app && docker scout recommendations kopfmann/homelibservice-auth-db",
+    "docker:scan": "docker scout recommendations kopfmann/homelib-multiarch && docker scout recommendations kopfmann/homelib-db-multiarch",
     "prebuild": "rimraf dist",
     "build": "nest build",
     "format": "prettier --write \"src/**/*.ts\" \"test/**/*.ts\"",

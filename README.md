@@ -58,7 +58,7 @@ After starting the app on port (5000 by default) you can run the tests (please m
 
 ## Docker Hub
 
-The images are available on the Docker Hub. Search for kopfmann/homelibservice-auth-app and kopfmann/homelibservice-auth-db. To pull the images and start the containers, run:
+The images are available on the Docker Hub. Search for kopfmann/homelib-multiarch and kopfmann/homelib-db-multiarch. To pull the images and start the containers, run:
 
 ```
 npm run docker:pull
