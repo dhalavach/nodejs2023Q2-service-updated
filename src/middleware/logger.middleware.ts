@@ -12,7 +12,7 @@ export class LoggerMiddleware implements NestMiddleware {
   use(req: RawBodyRequest<Request>, res: Response, next: NextFunction) {
     const body = req.rawBody ? req.rawBody.toString() : '';
     this.logger.log(
-      `Logging http request. Method: ${req.method} URL: ${req.url} Header: ${req.rawHeaders} Body:${body} Status: ${res.statusCode}`,
+      `Method: ${req.method} URL: ${req.url} Header: ${req.rawHeaders} Body:${body} Status: ${res.statusCode}`,
     );
     next();
   }

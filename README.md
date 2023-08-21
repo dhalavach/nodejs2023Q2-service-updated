@@ -42,7 +42,6 @@ To build images and start containers, run:
 npm run docker:build
 ```
 
-
 After starting the app on port (5000 by default) you can open a separate terminal window and run the tests (please make sure that nothing else is running on port 5000 - other container or some app, such as Mac Os Control Center which often uses this port)
 
 ## Testing
@@ -53,7 +52,7 @@ After installing the dependencies, pulling or building the images, and starting 
 npm run test:auth
 ```
 
-ATTENTION: Occasionally, the app takes some time to start inside the docker container, please wait if you encounter "socket hang up" error during tests (you can check the container's log in docker desktop to make sure that the app has started). However, if you are on M1 Mac, system and Docker restart might be required to fix this error. A variation of this error is when "Favorites" tests fail - it also means that the app has not fully started inside the container. Simply wait a little and all tests will pass! 
+ATTENTION: Occasionally, the app takes some time to start inside the docker container, please wait if you encounter "socket hang up" error during tests (you can check the container's log in docker desktop to make sure that the app has started). However, if you are on M1 Mac, system and Docker restart might be required to fix this error. A variation of this error is when only one test suite fails - it also means that the app has not fully started inside the container. Simply wait a little, try again, and all tests will pass! 
 
 
 ### Linter
@@ -68,7 +67,7 @@ NB: false positive eslint warning with nest are a known bug, no-unused-vars give
 
 ### Errors
 
-if you encounter errors, consider pruning the system and then pull or build images again
+if you encounter errors, consider pruning the system and then build images again
 
 ```
 docker system prune -a --volumes

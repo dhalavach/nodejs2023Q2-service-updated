@@ -14,20 +14,6 @@ export class Logger implements LoggerService {
     this.warningLogFile = process.env.WARNING_LOG_FILE || 'warnings';
     this.logMaxSize = Number(process.env.LOG_MAX_SIZE) || 1024;
   }
-  // private errorLogFileIndex = 1,
-  // private warningLogFileIndex = 1,
-  // private logFile = process.env.LOG_FILE || 'log',
-  // private errorLogFile = process.env.ERROR_LOG_FILE || 'errors',
-  // private warningLogFile = process.env.WARNING_LOG_FILE || 'warnings',
-  // private logMaxSize = Number(process.env.LOG_MAX_SIZE) || 1024,
-
-  // this.logFileIndex = 1;
-  // this.errorLogFileIndex = 1;
-  // this.warningLogFileIndex = 1;
-  // this.logFile = process.env.LOG_FILE || 'log';
-  // this.errorLogFile = process.env.ERROR_LOG_FILE || 'errors';
-  // this.warningLogFile = process.env.WARNING_LOG_FILE || 'warnings';
-  // this.logMaxSize = Number(process.env.LOG_MAX_SIZE) || 1024;
 
   logFileIndex: number;
   errorLogFileIndex: number;
@@ -38,7 +24,6 @@ export class Logger implements LoggerService {
   logMaxSize: number;
   logLevel: number;
 
-  //log levels: 3 - everything, 2 - logs excluded, 1 - warnings excluded, 0 - nothing (errors excluded)
   async log(message: any) {
     if (Number(this.configService.get('LOG_LEVEL')) < 3) return;
     let pathToLog = resolve(

@@ -10,7 +10,7 @@ import { AuthModule } from './auth/auth.module';
 import { LogModule } from './log/log.module';
 import { ConfigModule } from '@nestjs/config';
 import { APP_FILTER } from '@nestjs/core';
-import { HttpExceptionFilter } from './exceptions/http-exception-filter';
+import { HttpExceptionFilter } from './middleware/exception.filter';
 
 @Module({
   imports: [
