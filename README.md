@@ -32,11 +32,15 @@ in the unlikely event of error during the installation process, run:
 npm install --force
 ```
 
-### Docker
+## Environment
+
+make sure you have .env file in the root of the project with all the variables from .env.example
+
+## Docker
 
 download, install, and launch Docker
 
-### Docker Hub
+## Build images
 
 To build images and start containers, run:
 
@@ -51,6 +55,14 @@ docker system prune -a --volumes
 ```
 
 After starting the app on port (5000 by default) you can run the tests (please make sure that nothing else is running on port 5000 - other container or some app, such as Mac Os Control Center which often uses this port)
+
+## Docker Hub
+
+The images are available on the Docker Hub. Search for kopfmann/homelibservice-auth-app and kopfmann/homelibservice-auth-db. To pull the images and start the containers, run:
+
+```
+npm run docker:pull
+```
 
 ## Testing
 
@@ -71,6 +83,14 @@ npm run lint
 ```
 
 NB: false positive eslint warning with nest are a known bug, no-unused-vars gives an unneccessary warning in nest constructors
+
+### Vulnerabilities scan
+
+To scan the images for vulnerabiities and recommendations using Docker Scout run:
+
+```
+npm run docker:scan
+```
 
 ### Errors
 
