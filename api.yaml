@@ -1,11 +1,18 @@
 openapi: 3.0.0
 info:
-  title: Home Library Service v. 1.0
-  description: Home music library service
+  title: Home Library Service
+  description: Home music library backend application
   version: 1.0.0
+  contact: 
+    name: Dmitry Halavach
+    email: halavach@protonmail.com
 
 servers:
-  - url: /
+  - url: http://localhost:{port}/
+    variables:
+      port:
+        default: '5000'
+        description: The value of the port on which applications listens when run on localhost. Can be set in .env file
 
 components:
   schemas:
