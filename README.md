@@ -103,3 +103,111 @@ docker system prune -a --volumes
 WARNING: this will delete your unused images/containers and networks! run the command above only if you know what you are doing
 
 if you have any questions please contact me at halavach@protonmail.com or RS School Node.js Discord (@dhalavach). Cheers!
+
+###API Description
+The API has the following endpoints:
+
+### /user
+
+| Method |  Endpoint  |                         Description |
+|--------|:----------:|------------------------------------:|
+| GET	   |   /user    |                   Get all the users |
+| GET    | 	/user/:id |            	Get a single user by ID |
+| POST   |   	/user   |  	Create a new user in the database |
+| PUT    | 	/user/:id |                	Update a user by ID |
+| DELETE | 	/user/:id |                	Delete a user by ID |
+
+
+### /track
+
+| Method |  Endpoint   |                          Description |
+|--------|:-----------:|-------------------------------------:|
+| GET	   |   /track    |                       Get all tracks |
+| GET    | 	/track/:id |            	Get a single track by ID |
+| POST   |   	/track   |  	Create a new track in the database |
+| PUT    | 	/track/:id |                	Update a track by ID |
+| DELETE | 	/track/:id |                	Delete a track by ID |
+
+### /album
+
+| Method |  Endpoint   |                          Description |
+|--------|:-----------:|-------------------------------------:|
+| GET	   |   /album    |                        Get all albums |
+| GET    | 	/album/:id |            	Get a single album by ID |
+| POST   |   	/album   |  	Create a new album in the database |
+| PUT    | 	/album/:id |                	Update a album by ID |
+| DELETE | 	/album/:id |                	Delete a album by ID |
+
+### /artist
+
+| Method |   Endpoint   |                           Description |
+|--------|:------------:|--------------------------------------:|
+| GET	   |   /artist    |                       Get all artists |
+| GET    | 	/artist/:id |            	Get a single artist by ID |
+| POST   |   	/artist   |  	Create a new artist in the database |
+| PUT    | 	/artist/:id |                	Update a artist by ID |
+| DELETE | 	/artist/:id |                	Delete a artist by ID |
+
+### /favs
+
+| Method |     Endpoint      |                                  Description |
+|--------|:-----------------:|---------------------------------------------:|
+| GET	   |       /favs       |                           Get all favorites  |
+| GET    | 	/favs/track/:id  |     	Get a single track from favorites by ID |
+| GET    | 	/favs/album/:id  |     	Get a single album from favorites by ID |
+| GET    | 	/favs/artist/:id |     Get a single artist from favorites by ID |
+| POST   | 	/favs/track/:id  |   Add new track to favorites in the database |
+| POST   | 	/favs/album/:id  |   Add new album to favorites in the database |
+| POST   | 	/favs/artist/:id | 	Add new artist to favorites in the database |
+| DELETE | 	/favs/track/:id  |         	Delete a track by ID from favorites |
+| DELETE | 	/favs/album/:id  |         	Delete a album by ID from favorites |
+| DELETE | 	/favs/artist/:id |         Delete a artist by ID from favorites |
+
+
+## Response examples
+
+**GET /users
+
+```json
+[
+  {
+    "id": "62a13ccf-6de5-46ae-81dd-81a81301071d",
+    "login": "login",
+    "version": 1,
+    "createdAt": 134312412342134,
+    "updatedAt": 8410072081506
+  },
+  {
+    "id": "2d2f65be-73af-40d2-842e-4514fc86c664",
+    "login": "loeegin",
+    "version": 2,
+    "createdAt": 1710072083360,
+    "updatedAt": 1710072913111
+  },
+  {
+    "id": "9fcd76d7-4d5b-45a0-9937-0b7cc9007e52",
+    "login": "loeegin",
+    "version": 1,
+    "createdAt": 1710072084156,
+    "updatedAt": 1710072084156
+  },
+  {
+    "id": "0d411947-0d1d-495d-aa64-04fe4a9e0549",
+    "login": "loeegin",
+    "version": 1,
+    "createdAt": 1710072084910,
+    "updatedAt": 1710072084910
+  }
+]
+```
+
+**GET /users/:id Error response when the user is not found**
+
+```json
+{
+  "message": "User not found!",
+  "error": "Not Found",
+  "statusCode": 404
+}
+```
+
