@@ -111,6 +111,9 @@ WARNING: this will delete your unused images/containers and networks! run the co
 if you have any questions please contact me at halavach@protonmail.com or RS School Discord (@dhalavach). Cheers!
 
 ### API Description
+
+after cloning the repository and pulling/building docker images and starting the application, the API can be tested using Postman or analogous tool. By default, the app runs on 5000 port (for example, http://localhost:5000/user) but it can be customized in the .env file
+
 The API has the following endpoints:
 
 ### /user
