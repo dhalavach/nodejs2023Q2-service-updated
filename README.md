@@ -104,7 +104,7 @@ WARNING: this will delete your unused images/containers and networks! run the co
 
 if you have any questions please contact me at halavach@protonmail.com or RS School Node.js Discord (@dhalavach). Cheers!
 
-###API Description
+### API Description
 The API has the following endpoints:
 
 ### /user
